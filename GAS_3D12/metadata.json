@@ -1,0 +1,7 @@
+{
+  "name": "0729Interactive 3D Viewer",
+  "description": "Upload and view your own 3D models (.gltf, .glb).",
+  "version": "1.0.1",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
