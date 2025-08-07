@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>3D 模型＋動態資料</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      display: flex; height:100vh;
+      background:#111; font-family: "微軟正黑體", sans-serif;
+      color:#fff;
+    }
+    #sidebar {
+      width:200px; background:#000; padding:16px; overflow-y:auto;
+    }
+    #sidebar h2 {
+      color:#fff; font-size:18px; margin-bottom:12px;
+      border-bottom:1px solid #333; padding-bottom:6px;
+    }
+    .thumb { margin-bottom:20px; text-align:center; }
+    .thumb img {
+      width:100%; border:2px solid #444; border-radius:4px;
+      cursor:pointer; transition:.2s;
+    }
+    .thumb img:hover { border-color:#fff; transform:scale(1.03); }
+    .thumb label { display:block; margin-top:6px; color:#ddd; }
+    /* 中間 3D */
+    #mainframe { flex:1; border:none; width:50%; height:100%; background:#222; }
+    /* 右側 資料表 */
+    #infoframe {
+      width: calc(50% - 200px); /* 與 mainframe 共佔剩餘寬度 */
+      border:none; height:100%;
+    }
+    /* 只顯示帶 hash 的那一列 */
+    /* 透過 CSS，iframe 內只有該列顯示，其餘隱藏 */
+    /* 需將以下 style 放進 Data.html 裡的 <head> or .css 檔，如果沒有辦法改 Data.html，則顯示整表 */
+  </style>
+</head>
+<body>
+
+  <!-- 左側縮圖 -->
+  <div id="sidebar">
+    <h2>模型列表</h2>
+    <div class="thumb"><a href="#" onclick="load('ModelA');return false;">
+      <img src="sourse/img/ModelA.png"><label>Model A</label>
+    </a></div>
+    <div class="thumb"><a href="#" onclick="load('ModelB');return false;">
+      <img src="sourse/img/ModelB.png"><label>Model B</label>
+    </a></div>
+    <div class="thumb"><a href="#" onclick="load('ModelC');return false;">
+      <img src="sourse/img/ModelC.png"><label>Model C</label>
+    </a></div>
+  </div>
+
+  <!-- 中間載入 3D -->
+  <iframe id="mainframe" name="mainframe"
+          src="sourse/3Dweb/ModelA.html"></iframe>
+  <!-- 右側載入 Data.html 並帶入 hash -->
+  <iframe id="infoframe" name="infoframe"
+          src="sourse/Data.html#ModelA"></iframe>
+
+  <script>
+    function load(model) {
+      // 切換中間模型頁
+      document.getElementById('mainframe').src = 
+        'sourse/3Dweb/' + model + '.html';
+      // 切換右側資料頁（hash 導向該行）
+      document.getElementById('infoframe').src =
+        'sourse/Data.html#' + model;
+    }
+  </script>
+</body>
+</html>
