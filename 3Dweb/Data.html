@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D 模型資料（直式）</title>
+  <style>
+    body {
+      font-family: "微軟正黑體", sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 24px;
+      font-size: 24px;
+    }
+    .model-card {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .model-card.hidden {
+      display: none;
+    }
+    .model-card h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      color: #4A90E2;
+    }
+    .field {
+      display: flex;
+      margin: 6px 0;
+    }
+    .field .label {
+      width: 80px;
+      font-weight: bold;
+    }
+    .field .value {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <h1>3D 模型資料（直式）</h1>
+
+  <div id="ModelA" class="model-card">
+    <h2>ModelA</h2>
+    <div class="field"><div class="label">面數：</div><div class="value">14300</div></div>
+    <div class="field"><div class="label">格式：</div><div class="value">obj</div></div>
+    <div class="field"><div class="label">價格：</div><div class="value">$ 8</div></div>
+    <div class="field"><div class="label">數量：</div><div class="value">4</div></div>
+    <div class="field"><div class="label">說明：</div><div class="value">測試 A</div></div>
+  </div>
+
+  <div id="ModelB" class="model-card">
+    <h2>ModelB</h2>
+    <div class="field"><div class="label">面數：</div><div class="value">15300</div></div>
+    <div class="field"><div class="label">格式：</div><div class="value">fbx</div></div>
+    <div class="field"><div class="label">價格：</div><div class="value">$ 10</div></div>
+    <div class="field"><div class="label">數量：</div><div class="value">6</div></div>
+    <div class="field"><div class="label">說明：</div><div class="value">測試 B</div></div>
+  </div>
+
+  <div id="ModelC" class="model-card">
+    <h2>ModelC</h2>
+    <div class="field"><div class="label">面數：</div><div class="value">11000</div></div>
+    <div class="field"><div class="label">格式：</div><div class="value">glb</div></div>
+    <div class="field"><div class="label">價格：</div><div class="value">$ 7</div></div>
+    <div class="field"><div class="label">數量：</div><div class="value">7</div></div>
+    <div class="field"><div class="label">說明：</div><div class="value">測試 C</div></div>
+  </div>
+
+  <script>
+    function updateVisibility() {
+      const hash = location.hash.slice(1);
+      document.querySelectorAll('.model-card').forEach(card => {
+        if (!hash || card.id === hash) card.classList.remove('hidden');
+        else card.classList.add('hidden');
+      });
+    }
+    window.addEventListener('load',  updateVisibility);
+    window.addEventListener('hashchange', updateVisibility);
+  </script>
+</body>
+</html>
