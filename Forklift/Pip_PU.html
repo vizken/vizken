@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Forklift + PiP Switcher (Direct Open)</title>
+<style>
+  :root{ --pad:14px; --pip-w:360px; --pip-h:240px; }
+  html,body{margin:0;height:100%;background:#0b1220;color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto}
+  #main{position:fixed; inset:0; width:100%; height:100%; border:0; background:#0b1220}
+
+  #pip{ position:fixed; right:var(--pad); bottom:calc(var(--pad) + 60px);
+        width:var(--pip-w); height:var(--pip-h);
+        background:#0b1220; border:1px solid #283449; border-radius:12px; overflow:hidden;
+        box-shadow: 0 6px 30px rgba(0,0,0,.45); transition:all 0.3s ease; }
+  #pip iframe{ width:100%; height:100%; border:0; display:block; border-radius:inherit; }
+  .size-handle{ position:absolute; right:6px; bottom:6px; width:16px; height:16px; cursor:nwse-resize;
+                border-right:2px solid #64748b; border-bottom:2px solid #64748b; opacity:.9; }
+
+  #pip.fullscreen {
+    top:0 !important; left:0 !important; right:0 !important; bottom:60px !important;
+    width:100% !important; height:auto !important; border-radius:0 !important;
+  }
+
+  .panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 60px;
+    background: rgba(12,18,32,.85);
+    border-top: 1px solid #263248;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 16px;
+    font-size: 14px;
+    backdrop-filter: blur(6px) saturate(1.2);
+    box-shadow: 0 -4px 20px rgba(0,0,0,.35);
+    overflow-x: auto;
+  }
+  .row{ display:flex; align-items:center; gap:8px; }
+  .btn{ padding:6px 10px; border-radius:8px; border:1px solid #374151; background:#111827; color:#e5e7eb; cursor:pointer; }
+  .btn:hover{ background:#0f172a; }
+  select, input[type="range"]{ background:#0b1220; color:#e5e7eb; border:1px solid #374151; border-radius:8px; padding:4px 6px; }
+  .small{ font-size:12px; opacity:.8 }
+  
+  /* 狀態指示器 */
+  #status-indicator {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 8px 16px;
+    background: rgba(34, 197, 94, 0.9);
+    color: white;
+    border-radius: 8px;
+    font-size: 12px;
+    z-index: 1000;
+    display: none;
+  }
+  
+  #status-indicator.active {
+    display: block;
+    animation: fadeIn 0.3s;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+  <!-- 狀態指示器 -->
+  <div id="status-indicator"></div>
+
+  <iframe id="main" src="Forklift.html" allow="xr; autoplay; fullscreen"></iframe>
+
+  <div id="pip">
+    <iframe id="pipFrame" src="椅子.html" allow="xr; autoplay; fullscreen"></iframe>
+    <div class="size-handle" id="sizeHandle" title="拖曳以改變大小"></div>
+  </div>
+
+  <div class="panel" id="panel">
+    <div class="row">
+      <label for="srcSel">PiP來源：</label>
+      <select id="srcSel">
+        <option value="Pip_ForkA.html" selected>前叉</option>
+        <option value="車架.html">車架</option>
+        <option value="控制台.html">控制台</option>
+        <option value="椅子.html">椅子</option>
+		<option value="腳踏.html">腳踏</option>
+		<option value="背車殼.html">背車殼</option>
+		<option value="Pip_前右輪.html">前右輪</option>
+		<option value="Pip_前左輪.html">前左輪</option>
+		<option value="後右輪A.html">後右輪</option>
+		<option value="後左輪A.html">後左輪</option>
+      </select>
+      <button class="btn" id="reload">重載</button>
+    </div>
+    <div class="row">
+      <label><input type="checkbox" id="togglePip" checked> 顯示PiP</label>
+      <label><input type="checkbox" id="clickThrough"> 滑鼠穿透</label>
+      <label><input type="checkbox" id="autoSwitch" checked> 🔗 自動切換</label>
+    </div>
+    <div class="row">
+      <span class="small">透明度</span>
+      <input type="range" id="opacity" min="30" max="100" value="100">
+      <span class="small" id="opv">100%</span>
+    </div>
+    <div class="row">
+      <button class="btn" data-size="240x160">小</button>
+      <button class="btn" data-size="360x240">中</button>
+      <button class="btn" data-size="480x320">大</button>
+      <button class="btn" data-size="640x426">XL</button>
+      <button class="btn" id="toggleFS">⛶ 全螢幕</button>
+    </div>
+    <div class="row">
+      <button class="btn" id="pinTL">↖</button>
+      <button class="btn" id="pinTR">↗</button>
+      <button class="btn" id="pinBL">↙</button>
+      <button class="btn" id="pinBR">↘</button>
+    </div>
+    <div class="row small">快捷鍵：H 顯示、T 穿透、F 全螢幕</div>
+  </div>
+
+<script>
+  const pip = document.getElementById('pip');
+  const pipFrame = document.getElementById('pipFrame');
+  const srcSel = document.getElementById('srcSel');
+  const reloadBtn = document.getElementById('reload');
+  const statusIndicator = document.getElementById('status-indicator');
+  const autoSwitchCheckbox = document.getElementById('autoSwitch');
+
+  // 物件名稱到 HTML 文件的映射
+  const objectToFileMap = {
+    '前叉': 'Pip_ForkA.html',
+    '車架': '車架.html',
+    '控制台': '控制台.html',
+    '椅子': '椅子.html',
+    '腳踏': '腳踏.html',
+    '背車殼': '背車殼.html',
+    '前右輪': 'Pip_前右輪.html',
+    '前左輪': 'Pip_前左輪.html',
+    '後右輪': '後右輪A.html',
+    '後左輪': '後左輪A.html'
+  };
+
+  const setSrc = (val)=>{ 
+    pipFrame.src = val; 
+    srcSel.value = val; 
+  };
+  
+  srcSel.addEventListener('change', ()=> setSrc(srcSel.value));
+  reloadBtn.addEventListener('click', ()=> pipFrame.src = pipFrame.src);
+
+  document.getElementById('togglePip').addEventListener('change', e=>{
+    pip.style.display = e.target.checked ? 'block' : 'none';
+  });
+
+  const opacity = document.getElementById('opacity');
+  const opv = document.getElementById('opv');
+  const setOpacity = v => { pip.style.opacity = (v/100).toString(); opv.textContent = v + '%'; };
+  opacity.addEventListener('input', e=> setOpacity(e.target.value));
+  setOpacity(opacity.value);
+
+  const setSize = (w,h)=>{ pip.style.width = w+'px'; pip.style.height = h+'px'; };
+  document.querySelectorAll('.btn[data-size]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const [w,h] = btn.dataset.size.split('x').map(Number);
+      setSize(w,h);
+    });
+  });
+
+  const resetPin = ()=>{ pip.style.left=''; pip.style.top=''; pip.style.right=''; pip.style.bottom=''; };
+  document.getElementById('pinTL').addEventListener('click', ()=>{ resetPin(); pip.style.left='14px'; pip.style.top='14px'; });
+  document.getElementById('pinTR').addEventListener('click', ()=>{ resetPin(); pip.style.right='14px'; pip.style.top='14px'; });
+  document.getElementById('pinBL').addEventListener('click', ()=>{ resetPin(); pip.style.left='14px'; pip.style.bottom='74px'; });
+  document.getElementById('pinBR').addEventListener('click', ()=>{ resetPin(); pip.style.right='14px'; pip.style.bottom='74px'; });
+
+  const clickThrough = document.getElementById('clickThrough');
+  clickThrough.addEventListener('change', e=>{
+    pip.style.pointerEvents = e.target.checked ? 'none' : 'auto';
+  });
+
+  (function dragPip(){
+    let dragging=false, sx=0, sy=0, ox=0, oy=0;
+    pip.addEventListener('pointerdown', (e)=>{
+      if (e.target.id === 'sizeHandle') return;
+      dragging=true; sx=e.clientX; sy=e.clientY; ox=pip.offsetLeft; oy=pip.offsetTop;
+      pip.setPointerCapture(e.pointerId);
+    });
+    pip.addEventListener('pointermove', (e)=>{
+      if (!dragging) return;
+      pip.style.left = (ox + e.clientX - sx)+'px';
+      pip.style.top  = (oy + e.clientY - sy)+'px';
+      pip.style.right=''; pip.style.bottom='';
+    });
+    pip.addEventListener('pointerup', ()=> dragging=false);
+  })();
+
+  (function resizePip(){
+    const handle = document.getElementById('sizeHandle');
+    let resizing=false, sx=0, sy=0, sw=0, sh=0;
+    handle.addEventListener('pointerdown', (e)=>{
+      resizing=true; sx=e.clientX; sy=e.clientY; sw=pip.offsetWidth; sh=pip.offsetHeight;
+      handle.setPointerCapture(e.pointerId);
+    });
+    handle.addEventListener('pointermove', (e)=>{
+      if (!resizing) return;
+      const dw = e.clientX - sx, dh = e.clientY - sy;
+      pip.style.width  = Math.max(160, sw + dw) + 'px';
+      pip.style.height = Math.max(120, sh + dh) + 'px';
+    });
+    handle.addEventListener('pointerup', ()=> resizing=false);
+  })();
+
+  const toggleFS = document.getElementById('toggleFS');
+  toggleFS.addEventListener('click', ()=>{
+    pip.classList.toggle('fullscreen');
+    toggleFS.textContent = pip.classList.contains('fullscreen') ? '⛶ 還原' : '⛶ 全螢幕';
+  });
+
+  addEventListener('keydown', (e)=>{
+    const k = e.key.toLowerCase();
+    if (k==='h') document.getElementById('togglePip').click();
+    if (k==='t') document.getElementById('clickThrough').click();
+    if (k==='f') toggleFS.click();
+  });
+  
+  // 顯示狀態提示
+  function showStatus(message) {
+    statusIndicator.textContent = message;
+    statusIndicator.classList.add('active');
+    setTimeout(() => {
+      statusIndicator.classList.remove('active');
+    }, 2000);
+  }
+  
+  // 🔗 方法 1：使用 localStorage 進行跨 iframe 通訊（file:// 協議可用）
+  function switchPipByObject(objectName) {
+    if (!autoSwitchCheckbox.checked) return;
+    
+    console.log('[Main] 收到物件選擇:', objectName);
+    
+    if (!objectName) {
+      console.log('[Main] 物件取消選擇');
+      return;
+    }
+    
+    // 尋找匹配的文件
+    let matchedFile = null;
+    
+    // 精確匹配
+    if (objectToFileMap[objectName]) {
+      matchedFile = objectToFileMap[objectName];
+    } else {
+      // 部分匹配
+      for (const key in objectToFileMap) {
+        if (objectName.includes(key) || key.includes(objectName)) {
+          matchedFile = objectToFileMap[key];
+          console.log('[Main] 部分匹配:', key, '→', matchedFile);
+          break;
+        }
+      }
+    }
+    
+    if (matchedFile) {
+      console.log('[Main] 切換 PiP 到:', matchedFile);
+      setSrc(matchedFile);
+      showStatus('已切換到: ' + objectName);
+      
+      // 確保 PiP 可見
+      const togglePipCheckbox = document.getElementById('togglePip');
+      if (togglePipCheckbox && !togglePipCheckbox.checked) {
+        togglePipCheckbox.checked = true;
+        pip.style.display = 'block';
+      }
+    } else {
+      console.log('[Main] ⚠️ 未找到對應的文件，物件名稱:', objectName);
+      showStatus('找不到對應零件: ' + objectName);
+    }
+  }
+  
+  // 監聽 localStorage 變化
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'forklift_selected_object') {
+      const objectName = e.newValue;
+      if (objectName) {
+        switchPipByObject(objectName);
+      }
+    }
+  });
+  
+  // 輪詢檢查 localStorage（作為備用方案）
+  let lastSelectedObject = null;
+  setInterval(() => {
+    if (!autoSwitchCheckbox.checked) return;
+    
+    try {
+      const currentObject = localStorage.getItem('forklift_selected_object');
+      if (currentObject && currentObject !== lastSelectedObject) {
+        lastSelectedObject = currentObject;
+        switchPipByObject(currentObject);
+      }
+    } catch(e) {
+      // localStorage 可能被禁用
+    }
+  }, 500);
+  
+  console.log('[Main] ✅ 已啟用物件選擇監聽（localStorage 模式）');
+  console.log('[Main] 支援的物件:', Object.keys(objectToFileMap));
+</script>
+
+</body>
+</html>

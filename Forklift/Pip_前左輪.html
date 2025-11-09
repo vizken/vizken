@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pip_前左輪</title>
+<style>
+  :root{ 
+    --pad:14px; 
+    --pip-w:360px; 
+    --pip-h:240px; 
+    --panel-h:70px;
+    /* 主題色彩 */
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #60a5fa;
+    --bg-panel: rgba(15, 23, 42, 0.95);
+    --bg-card: rgba(30, 41, 59, 0.9);
+    --border-color: rgba(71, 85, 105, 0.5);
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --accent: #8b5cf6;
+    --accent-light: #a78bfa;
+  }
+  
+  html,body{
+    margin:0;
+    height:100%;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  }
+  
+  #main{
+    position:fixed; 
+    inset:0; 
+    width:100%; 
+    height:100%; 
+    border:0; 
+  }
+
+  /* PiP 窗口樣式 */
+  #pip{
+    position:fixed; 
+    right:var(--pad); 
+    top:calc(var(--pad) + var(--panel-h));
+    width:var(--pip-w); 
+    height:var(--pip-h);
+    background: rgba(15, 23, 42, 0.8);
+    border:1px solid var(--border-color);
+    border-radius:16px; 
+    overflow:hidden;
+    box-shadow: 
+      0 20px 25px -5px rgba(0, 0, 0, 0.3),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
+  }
+  
+  #pip:hover{
+    box-shadow: 
+      0 25px 30px -5px rgba(0, 0, 0, 0.4),
+      0 15px 15px -5px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  
+  #pip iframe{ 
+    width:100%; 
+    height:100%; 
+    border:0; 
+    display:block; 
+    border-radius:inherit; 
+  }
+  
+  .size-handle{ 
+    position:absolute; 
+    right:8px; 
+    bottom:8px; 
+    width:20px; 
+    height:20px; 
+    cursor:nwse-resize;
+    background: linear-gradient(135deg, transparent 50%, var(--primary) 50%);
+    border-radius: 0 0 14px 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  
+  .size-handle:hover{
+    opacity: 1;
+  }
+
+  #pip.fullscreen {
+    top: var(--panel-h) !important; 
+    left:0 !important; 
+    right:0 !important; 
+    bottom:0 !important;
+    width:100% !important; 
+    height:auto !important; 
+    border-radius:0 !important;
+  }
+
+  /* 精美控制面板 */
+ .panel {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) scale(0.75); /* 居中 + 縮小 75% */
+  transform-origin: top center;             /* 以上方中間為縮放基準 */
+  width: 75%;                               /* 面板寬度佔畫面 75% */
+  height: calc(var(--panel-h) * 0.75);
+  background: rgba(15, 23, 42, 0.75);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 20px;
+  font-size: 14px;
+  backdrop-filter: blur(20px) saturate(1.5);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  overflow-x: auto;
+  overflow-y: hidden;
+  z-index: 100;
+  opacity: 0.75;
+}
+
+  
+  /* 隱藏滾動條但保持可滾動 */
+  .panel::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .panel::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .panel::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 2px;
+  }
+  
+  /* 控制組 */
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s;
+  }
+  
+  .control-group:hover {
+    background: rgba(51, 65, 85, 0.9);
+    border-color: var(--primary);
+  }
+  
+  .control-group.highlight {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+    border-color: var(--primary-light);
+  }
+  
+  /* 分隔線 */
+  .divider {
+    width: 1px;
+    height: 30px;
+    background: linear-gradient(to bottom, transparent, var(--border-color), transparent);
+  }
+  
+  /* 標籤 */
+  .label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+  
+  /* 選擇器 */
+  select {
+    background: rgba(30, 41, 59, 0.8);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 32px 6px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    min-width: 160px;
+  }
+  
+  select:hover {
+    background: rgba(51, 65, 85, 0.8);
+    border-color: var(--primary);
+  }
+  
+  select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+  
+  /* 圖標按鈕 */
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: rgba(30, 60, 60, 0.6);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .icon-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  
+  .icon-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  .icon-btn:hover::before {
+    opacity: 0.15;
+  }
+  
+  .icon-btn:active {
+    transform: translateY(0);
+  }
+  
+  .icon-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--text-primary);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    position: relative;
+    z-index: 1;
+    transition: all 0.2s;
+  }
+  
+  .icon-btn:hover svg {
+    stroke: var(--primary-light);
+    transform: scale(1.1);
+  }
+  
+  /* 特殊圖標按鈕樣式 */
+  .icon-btn.size-sm { width: 32px; height: 32px; }
+  .icon-btn.size-sm svg { width: 14px; height: 14px; }
+  
+  .icon-btn.primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-color: var(--primary);
+  }
+  
+  .icon-btn.primary svg {
+    stroke: white;
+  }
+  
+  /* 切換開關樣式 */
+  .toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .toggle {
+    position: relative;
+    width: 42px;
+    height: 22px;
+    background: rgba(71, 85, 105, 0.5);
+    border-radius: 11px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 1px solid var(--border-color);
+  }
+  
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  input[type="checkbox"] {
+    display: none;
+  }
+  
+  input[type="checkbox"]:checked + .toggle {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-color: var(--primary);
+  }
+  
+  input[type="checkbox"]:checked + .toggle::after {
+    left: 22px;
+  }
+  
+  /* 滑桿樣式 */
+  .slider-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100px;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(to right, 
+      var(--primary) 0%, 
+      var(--primary) var(--slider-value, 100%), 
+      rgba(71, 85, 105, 0.3) var(--slider-value, 100%), 
+      rgba(71, 85, 105, 0.3) 100%);
+    outline: none;
+    transition: all 0.2s;
+  }
+  
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+    transition: all 0.2s;
+  }
+  
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 3px 12px rgba(59, 130, 246, 0.6);
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+  }
+  
+  .value-display {
+    min-width: 45px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-light);
+    font-variant-numeric: tabular-nums;
+  }
+  
+  /* 小螢幕隱藏 */
+  @media (max-width: 640px) {
+    .panel, #pip { display: none !important; }
+  }
+  
+  /* 工具提示 */
+  .tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: rgba(15, 23, 42, 0.95);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+  }
+  
+  .icon-btn:hover .tooltip {
+    opacity: 1;
+  }
+  
+  /* 動畫 */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  .loading svg {
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+</style>
+</head>
+<body>
+  <iframe id="main" src="前左輪.html" allow="xr; autoplay; fullscreen"></iframe>
+
+  <div id="pip">
+    <iframe id="pipFrame" src="CP/32358.html" allow="xr; autoplay; fullscreen"></iframe>
+    <div class="size-handle" id="sizeHandle"></div>
+  </div>
+
+  <div class="panel" id="panel">
+    <!-- 來源選擇 -->
+    <div class="control-group highlight">
+      <span class="label">來源</span>
+      <select id="srcSel">
+        <option value="CP/32358.html" selected>輪胎</option>
+        <option value="CP/31040A.html">框</option>
+      </select>
+      <button class="icon-btn" id="reload" title="重新載入">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+          <path d="M21 3v5h-5"/>
+        </svg>
+        <span class="tooltip">重新載入</span>
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 顯示控制 -->
+    <div class="control-group">
+      <div class="toggle-wrapper">
+        <span class="label">顯示</span>
+        <input type="checkbox" id="togglePip" checked>
+        <label for="togglePip" class="toggle"></label>
+      </div>
+    </div>
+
+    <!-- 穿透控制 -->
+    <div class="control-group">
+      <div class="toggle-wrapper">
+        <span class="label">穿透</span>
+        <input type="checkbox" id="clickThrough">
+        <label for="clickThrough" class="toggle"></label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 透明度 -->
+    <div class="control-group">
+      <span class="label">透明度</span>
+      <div class="slider-wrapper">
+        <input type="range" id="opacity" min="30" max="100" value="100">
+        <span class="value-display" id="opv">100%</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 大小控制 -->
+    <div class="control-group">
+      <button class="icon-btn size-sm" data-size="240x160" title="小">
+        <svg viewBox="0 0 24 24">
+          <rect x="5" y="5" width="14" height="14" rx="2"/>
+        </svg>
+        <span class="tooltip">小 (240×160)</span>
+      </button>
+      <button class="icon-btn size-sm" data-size="360x240" title="中">
+        <svg viewBox="0 0 24 24">
+          <rect x="4" y="4" width="16" height="16" rx="2"/>
+        </svg>
+        <span class="tooltip">中 (360×240)</span>
+      </button>
+      <button class="icon-btn size-sm" data-size="480x320" title="大">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+        </svg>
+        <span class="tooltip">大 (480×320)</span>
+      </button>
+      <button class="icon-btn size-sm" data-size="1280x720" title="超大">
+        <svg viewBox="0 0 24 24">
+          <rect x="2" y="2" width="20" height="20" rx="2"/>
+        </svg>
+        <span class="tooltip">超大 (1280x720)</span>
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 位置控制 -->
+    <div class="control-group">
+    <button class="icon-btn size-sm" id="pinTL" title="靠左">
+  <svg viewBox="0 0 24 24">
+    <path d="M15 18l-6-6 6-6"/> <!-- 向左箭頭 -->
+  </svg>
+  <span class="tooltip">靠左</span>
+</button>
+      <button class="icon-btn size-sm" id="pinTR" title="靠右">
+  <svg viewBox="0 0 24 24">
+    <path d="M9 6l6 6-6 6"/> <!-- 向右箭頭 -->
+  </svg>
+  <span class="tooltip">靠右</span>
+</button>
+      
+    </div>
+
+    <div class="divider"></div>
+
+  </div>
+
+<script>
+  const pip = document.getElementById('pip');
+  const pipFrame = document.getElementById('pipFrame');
+  const srcSel = document.getElementById('srcSel');
+  const reloadBtn = document.getElementById('reload');
+
+  const setSrc = (val)=>{ 
+    pipFrame.src = val; 
+    srcSel.value = val; 
+  };
+  
+  srcSel.addEventListener('change', ()=> setSrc(srcSel.value));
+  
+  reloadBtn.addEventListener('click', ()=> {
+    reloadBtn.classList.add('loading');
+    pipFrame.src = pipFrame.src;
+    setTimeout(() => reloadBtn.classList.remove('loading'), 1000);
+  });
+
+  document.getElementById('togglePip').addEventListener('change', e=>{
+    pip.style.display = e.target.checked ? 'block' : 'none';
+  });
+
+  const opacity = document.getElementById('opacity');
+  const opv = document.getElementById('opv');
+  const setOpacity = v => { 
+    pip.style.opacity = (v/100).toString(); 
+    opv.textContent = v + '%';
+    opacity.style.setProperty('--slider-value', v + '%');
+  };
+  opacity.addEventListener('input', e=> setOpacity(e.target.value));
+  setOpacity(opacity.value);
+
+  const setSize = (w,h)=>{ 
+    pip.style.width = w+'px'; 
+    pip.style.height = h+'px'; 
+  };
+  
+  document.querySelectorAll('.btn[data-size], .icon-btn[data-size]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const [w,h] = btn.dataset.size.split('x').map(Number);
+      setSize(w,h);
+    });
+  });
+
+  const SAFE_TOP = 84;
+  const resetPin = ()=>{ 
+    pip.style.left=''; 
+    pip.style.top=''; 
+    pip.style.right=''; 
+    pip.style.bottom=''; 
+  };
+  
+  document.getElementById('pinTL').addEventListener('click', ()=>{ 
+    resetPin(); 
+    pip.style.left='14px'; 
+    pip.style.top= SAFE_TOP + 'px'; 
+  });
+  
+  document.getElementById('pinTR').addEventListener('click', ()=>{ 
+    resetPin(); 
+    pip.style.right='14px'; 
+    pip.style.top= SAFE_TOP + 'px'; 
+  });
+  
+  document.getElementById('pinBL').addEventListener('click', ()=>{ 
+    resetPin(); 
+    pip.style.left='14px'; 
+    pip.style.bottom='14px'; 
+  });
+  
+  document.getElementById('pinBR').addEventListener('click', ()=>{ 
+    resetPin(); 
+    pip.style.right='14px'; 
+    pip.style.bottom='14px'; 
+  });
+
+  const clickThrough = document.getElementById('clickThrough');
+  clickThrough.addEventListener('change', e=>{
+    pip.style.pointerEvents = e.target.checked ? 'none' : 'auto';
+  });
+
+  (function dragPip(){
+    let dragging=false, sx=0, sy=0, ox=0, oy=0;
+    pip.addEventListener('pointerdown', (e)=>{
+      if (e.target.id === 'sizeHandle') return;
+      dragging=true; sx=e.clientX; sy=e.clientY; ox=pip.offsetLeft; oy=pip.offsetTop;
+      pip.setPointerCapture(e.pointerId);
+    });
+    pip.addEventListener('pointermove', (e)=>{
+      if (!dragging) return;
+      pip.style.left = (ox + e.clientX - sx)+'px';
+      pip.style.top  = (oy + e.clientY - sy)+'px';
+      pip.style.right=''; pip.style.bottom='';
+    });
+    pip.addEventListener('pointerup', ()=> dragging=false);
+  })();
+
+  (function resizePip(){
+    const handle = document.getElementById('sizeHandle');
+    let resizing=false, sx=0, sy=0, sw=0, sh=0;
+    handle.addEventListener('pointerdown', (e)=>{
+      resizing=true; sx=e.clientX; sy=e.clientY; sw=pip.offsetWidth; sh=pip.offsetHeight;
+      handle.setPointerCapture(e.pointerId);
+    });
+    handle.addEventListener('pointermove', (e)=>{
+      if (!resizing) return;
+      const dw = e.clientX - sx, dh = e.clientY - sy;
+      pip.style.width  = Math.max(160, sw + dw) + 'px';
+      pip.style.height = Math.max(120, sh + dh) + 'px';
+    });
+    handle.addEventListener('pointerup', ()=> resizing=false);
+  })();
+
+  const toggleFS = document.getElementById('toggleFS');
+  toggleFS.addEventListener('click', ()=>{
+    pip.classList.toggle('fullscreen');
+    const isFS = pip.classList.contains('fullscreen');
+    toggleFS.querySelector('svg').innerHTML = isFS 
+      ? '<path d="M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3"/>'
+      : '<path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>';
+    toggleFS.title = isFS ? '還原' : '全螢幕';
+  });
+
+  addEventListener('keydown', (e)=>{
+    const k = e.key.toLowerCase();
+    if (k==='h') document.getElementById('togglePip').click();
+    if (k==='t') document.getElementById('clickThrough').click();
+    if (k==='f') toggleFS.click();
+  });
+</script>
+</body>
+</html>
