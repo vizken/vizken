@@ -14,7 +14,7 @@
         padding: 0;
         overflow: hidden;
         background-color: #111827; /* bg-gray-900 */
-        font-family: sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       }
       model-viewer {
         width: 100%;
@@ -32,130 +32,193 @@
       }
       .controls {
         position: fixed;
-        top: 10px;
-        right: 10px;
-        background: rgba(17, 24, 39, 0.8); /* bg-gray-900 with opacity */
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        background: rgba(17, 24, 39, 0.85);
         padding: 1rem;
         border-radius: 0.5rem;
-        border: 1px solid #4b5563; /* gray-600 */
-        color: #d1d5db; /* gray-300 */
-        font-family: sans-serif;
+        border: 1px solid #4b5563;
+        color: #d1d5db;
         max-width: 280px;
-        backdrop-filter: blur(5px);
+        backdrop-filter: blur(8px);
         z-index: 10;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
       }
-      .controls h3 {
-        margin: 0 0 1rem 0;
-        font-size: 1.1rem;
-        font-weight: bold;
-        color: #f9fafb; /* gray-100 */
-      }
-      .control-group {
+      .controls::-webkit-scrollbar { width: 6px; }
+      .controls::-webkit-scrollbar-track { background: transparent; }
+      .controls::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+      .controls::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+      
+      .section-title {
         margin-bottom: 0.75rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #9ca3af; /* gray-400 */
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
       }
-      .control-group:last-child {
-        margin-bottom: 0;
-      }
-      .control-group label {
+      .control-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 0.25rem;
-        font-size: 0.9rem;
-        color: #9ca3af; /* gray-400 */
       }
-      .control-group input[type="color"] {
-        width: 100%;
-        height: 2rem;
-        padding: 0;
-        border: 1px solid #4b5563; /* gray-600 */
-        background: transparent;
-        border-radius: 0.25rem;
+      .control-row > label {
+        font-size: 0.875rem;
+        color: #e5e7eb; /* gray-200 */
         cursor: pointer;
       }
-      .control-group input[type="range"] {
+      .color-swatch-wrapper {
+        width: 2rem;
+        height: 1rem;
+        border-radius: 0.375rem;
+        border: 1px solid #4b5563;
+        background-color: #1f2937;
+        padding: 2px;
+        box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.2);
+        cursor: pointer;
+      }
+      .color-swatch-input {
         width: 100%;
-        accent-color: #38bdf8; /* cyan-400 */
-      }
-      .control-group span {
-        font-family: monospace;
-        font-size: 0.8rem;
-      }
-      .section-divider {
-        border-top: 1px solid #4b5563; /* gray-600 */
-        margin: 1rem 0;
-      }
-      .dropdown {
-        width: 100%;
-        background-color: #374151; /* gray-700 */
-        border: 1px solid #4b5563; /* gray-600 */
-        color: white;
-        border-radius: 0.25rem;
-        padding: 0.5rem;
+        height: 100%;
+        padding: 0;
+        border: none;
+        background-color: transparent;
+        border-radius: 4px;
+        cursor: pointer;
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
-        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%239ca3af%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%20/%3E%3C/svg%3E');
-        background-repeat: no-repeat;
-        background-position: right 0.5rem center;
-        background-size: 1.25em 1.25em;
+      }
+      .color-swatch-input::-webkit-color-swatch-wrapper { padding: 0; }
+      .color-swatch-input::-webkit-color-swatch { border: none; border-radius: 3px; }
+      
+      /* BG color picker specifically */
+      .bg-color-picker {
+        width: 2rem;
+        height: 1.75rem;
+        padding: 2px;
+        border: 1px solid #4b5563;
+        background-color: #374151;
+        border-radius: 0.375rem;
         cursor: pointer;
       }
-      .button {
-        width: 100%;
-        padding: 0.5rem 1rem;
-        border: 1px solid transparent;
-        border-radius: 0.25rem;
-        font-weight: 500;
-        color: white;
-        background-color: #2563eb; /* blue-600 */
-        cursor: pointer;
-        transition: background-color 0.2s;
+      .bg-color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+      .bg-color-picker::-webkit-color-swatch { border: none; border-radius: 0.25rem; }
+
+      .mono-value {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 0.875rem;
+        color: #9ca3af;
+        text-transform: uppercase;
       }
-      .button:hover {
-        background-color: #1d4ed8; /* blue-700 */
-      }
-      .lifecycle-info {
-        font-size: 0.8rem;
-        color: #9ca3af; /* gray-400 */
-        line-height: 1.6;
-      }
-      .info-row {
-        display: flex;
-        justify-content: space-between;
-      }
-      .info-row span:last-child {
-        font-weight: 500;
-        color: #d1d5db; /* gray-300 */
-      }
-      .status-normal { color: #22c55e; } /* green-500 */
-      .status-warning { color: #f59e0b; } /* amber-500 */
-      .status-expired { color: #ef4444; } /* red-500 */
-      .progress-bar-container {
-        margin-top: 1rem;
-      }
-      .progress-bar-label {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.7rem;
-        color: #9ca3af; /* gray-400 */
-        margin-bottom: 0.25rem;
-      }
-      .progress-bar {
+      
+      input[type="range"] {
+        -webkit-appearance: none; appearance: none;
         width: 100%;
         height: 8px;
-        background-color: #374151; /* gray-700 */
+        background: #374151; /* gray-700 */
         border-radius: 4px;
-        overflow: hidden;
+        outline: none;
+        cursor: pointer;
       }
-      .progress-bar-fill {
-        height: 100%;
-        border-radius: 4px;
-        transition: width 0.5s ease-in-out;
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none; appearance: none;
+        width: 18px; height: 18px;
+        background: #22d3ee; /* cyan-400 */
+        border-radius: 50%;
       }
+      input[type="range"]::-moz-range-thumb {
+        width: 18px; height: 18px;
+        background: #22d3ee;
+        border-radius: 50%;
+        border: none;
+      }
+      .space-y-3 > *:not([hidden]) ~ *:not([hidden]) { margin-top: 0.75rem; }
+      .space-y-4 > *:not([hidden]) ~ *:not([hidden]) { margin-top: 1rem; }
+      .mb-2 { margin-bottom: 0.5rem; }
+      .mt-2 { margin-top: 0.5rem; }
+
+      .section-divider {
+        border-top: 1px solid #4b5563; /* gray-600 */
+        margin: 0;
+      }
+      
+      .controls h3 { margin: 0 0 0.75rem 0; font-size: 1rem; font-weight: bold; color: #f9fafb; }
+      .old-control-group { margin-bottom: 0.6rem; }
+      .old-control-group:last-child { margin-bottom: 0; }
+      .old-control-group label { display: block; margin-bottom: 0.25rem; font-size: 0.8rem; color: #9ca3af; }
+      .dropdown { width: 100%; background-color: #374151; border: 1px solid #4b5563; color: white; border-radius: 0.25rem; padding: 0.4rem; font-size: 0.8rem; -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%239ca3af%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%20/%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.25em 1.25em; cursor: pointer; }
+      .button { width: 100%; padding: 0.4rem 0.8rem; border: 1px solid transparent; border-radius: 0.25rem; font-weight: 500; font-size: 0.8rem; color: white; background-color: #2563eb; cursor: pointer; transition: background-color 0.2s; }
+      .button:hover { background-color: #1d4ed8; }
+      .lifecycle-info { font-size: 0.75rem; color: #9ca3af; line-height: 1.6; }
+      .info-row { display: flex; justify-content: space-between; }
+      .info-row span:last-child { font-weight: 500; color: #d1d5db; }
+      .status-normal { color: #22c55e; }
+      .status-warning { color: #f59e0b; }
+      .status-expired { color: #ef4444; }
+      .progress-bar-container { margin-top: 1rem; }
+      .progress-bar-label { display: flex; justify-content: space-between; font-size: 0.65rem; color: #9ca3af; margin-bottom: 0.25rem; }
+      .progress-bar { width: 100%; height: 8px; background-color: #374151; border-radius: 4px; overflow: hidden; }
+      .progress-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease-in-out, background-color 0.5s; }
       .status-bg-normal { background-color: #22c55e; }
       .status-bg-warning { background-color: #f59e0b; }
       .status-bg-expired { background-color: #ef4444; }
+      .date-control-group { margin-top: 1rem; }
+      .date-control-group label { display: block; margin-bottom: 0.5rem; font-size: 0.875rem; color: #e5e7eb; }
+      .date-input { 
+        width: 100%;
+        box-sizing: border-box;
+        background-color: #374151;
+        border: 1px solid #4b5563;
+        color: white;
+        border-radius: 0.375rem;
+        padding: 0.4rem;
+        font-size: 0.8rem;
+        color-scheme: dark;
+      }
+      .learn-more {
+        text-align: right;
+        margin-top: 0.5rem;
+      }
+      .learn-more a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #facc15; /* yellow-400 */
+        text-decoration: underline;
+        transition: color 0.2s ease;
+      }
+      .learn-more a:hover {
+        color: #fde047; /* yellow-300 */
+      }
+      .learn-more .icon-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        background-color: #0e7490; /* cyan-700 */
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
+      }
+      .learn-more a:hover .icon-wrapper {
+        background-color: #0891b2; /* cyan-600 */
+      }
+      .learn-more svg {
+        width: 1rem;
+        height: 1rem;
+      }
+
+      @media (max-width: 639px) {
+        .controls { display: none; }
+      }
     </style>
 </head>
 <body>
@@ -178,39 +241,79 @@
   </model-viewer>
 
   <div class="controls">
-    <h3>Material Controls</h3>
-    <div class="control-group">
-      <label for="color-picker">Color</label>
-      <input type="color" id="color-picker" value="#282828">
+    <div>
+      <h3 class="section-title">VIEWER</h3>
+      <div class="space-y-3">
+        <div class="control-row">
+          <label for="background-color-picker">Background</label>
+          <input type="color" id="background-color-picker" class="bg-color-picker" value="#1f2937">
+        </div>
+      </div>
     </div>
-    <div class="control-group">
-      <label for="roughness-slider">Roughness <span id="roughness-value">0.40</span></label>
-      <input type="range" id="roughness-slider" min="0" max="1" step="0.01" value="0.4">
-    </div>
-    <div class="control-group">
-      <label for="metalness-slider">Metalness <span id="metalness-value">1.00</span></label>
-      <input type="range" id="metalness-slider" min="0" max="1" step="0.01" value="1">
-    </div>
-    
     
     <div class="section-divider"></div>
-    <h3>生命週期資訊</h3>
-    <div class="lifecycle-info">
-      <div class="info-row"><span>零件品名:</span><span>油管滾輪</span></div>
-      <div class="info-row"><span>型號:</span><span>3019909</span></div>
-      <div class="info-row"><span>安裝日期:</span><span>2023/10/3</span></div>
-      <div class="info-row"><span>使用壽命:</span><span>6年</span></div>
-      <div class="info-row"><span>建議更換日期:</span><span>2029/10/02</span></div>
-      <div class="info-row"><span>狀態:</span><span class="status-normal">正常</span></div>
-    </div>
-    <div class="progress-bar-container">
-      <div class="progress-bar-label">
-          <span>已使用: 732 天</span>
-          <span>33.4%</span>
-          <span>剩餘: 1459 天</span>
+
+    <div>
+      <h3 class="section-title">MATERIAL</h3>
+      <div class="space-y-4">
+        <div class="control-row">
+          <label for="material-color-picker">Color <span class="mono-value" id="color-value">#282828</span></label>
+          <div class="color-swatch-wrapper">
+            <input type="color" id="material-color-picker" value="#282828" class="color-swatch-input">
+          </div>
+        </div>
+        <div>
+          <div class="control-row">
+            <label for="metalness-slider">Metalness</label>
+            <span class="mono-value" id="metalness-value">1.00</span>
+          </div>
+          <input type="range" id="metalness-slider" min="0" max="1" step="0.01" value="1" class="mt-2">
+        </div>
+        <div>
+          <div class="control-row">
+            <label for="roughness-slider">Roughness</label>
+            <span class="mono-value" id="roughness-value">0.40</span>
+          </div>
+          <input type="range" id="roughness-slider" min="0" max="1" step="0.01" value="0.4" class="mt-2">
+        </div>
       </div>
-      <div class="progress-bar">
-          <div class="progress-bar-fill status-bg-normal" style="width: 33.40177960301163%;"></div>
+    </div>
+    
+    
+    <div id="lifecycle-section">
+      <div class="section-divider"></div>
+      <h3>生命週期資訊</h3>
+      <div class="lifecycle-info">
+        <div class="info-row"><span>零件品名:</span><span id="lc-part-name"></span></div>
+        <div class="info-row"><span>型號:</span><span id="lc-model-number"></span></div>
+        <div class="info-row"><span>安裝日期:</span><span id="lc-install-date"></span></div>
+        <div class="info-row"><span>使用壽命:</span><span id="lc-lifespan"></span></div>
+        <div class="info-row"><span>建議更換日期:</span><span id="lc-change-date"></span></div>
+        <div class="info-row"><span>狀態:</span><span id="lc-status"></span></div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-label">
+          <span id="lc-days-used-label"></span>
+          <span id="lc-percentage-label"></span>
+          <span id="lc-days-remaining-label"></span>
+        </div>
+        <div class="progress-bar">
+            <div id="lc-progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+      <div class="date-control-group">
+        <label for="reference-date-picker">計算基準日期</label>
+        <input type="date" id="reference-date-picker" class="date-input">
+      </div>
+      <div class="learn-more">
+        <a href="#" target="_blank" rel="noopener noreferrer">
+          <div class="icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+            </svg>
+          </div>
+          <span>Learn more</span>
+        </a>
       </div>
     </div>
   
@@ -221,11 +324,13 @@
   <script>
     const modelViewer = document.getElementById('viewer');
 
-    const colorPicker = document.getElementById('color-picker');
+    const bgColorPicker = document.getElementById('background-color-picker');
+    const colorPicker = document.getElementById('material-color-picker');
     const roughnessSlider = document.getElementById('roughness-slider');
     const metalnessSlider = document.getElementById('metalness-slider');
     const roughnessValue = document.getElementById('roughness-value');
     const metalnessValue = document.getElementById('metalness-value');
+    const colorValue = document.getElementById('color-value');
 
     const applyMaterialProperties = () => {
       if (!modelViewer.model) return;
@@ -236,6 +341,7 @@
       
       roughnessValue.textContent = roughness.toFixed(2);
       metalnessValue.textContent = metalness.toFixed(2);
+      colorValue.textContent = colorHex.toUpperCase();
 
       const colorRgb = [
         parseInt(colorHex.substring(1, 3), 16) / 255,
@@ -253,19 +359,113 @@
     };
     
     modelViewer.addEventListener('load', () => {
-      // Apply initial values set from the app
+      modelViewer.style.backgroundColor = bgColorPicker.value;
       applyMaterialProperties();
 
-      // Add event listeners for live updates
+      bgColorPicker.addEventListener('input', () => {
+        modelViewer.style.backgroundColor = bgColorPicker.value;
+      });
       colorPicker.addEventListener('input', applyMaterialProperties);
       roughnessSlider.addEventListener('input', applyMaterialProperties);
       metalnessSlider.addEventListener('input', applyMaterialProperties);
       
-      // Animation script
       
       
-      // Links script
       
+      const partInfo = {"manufacturer":"TAILIFT","partNumber":"3019909","partName":"油管滾輪","lifespan":"6年","installDate":"2023/10/3"};
+      const refDatePicker = document.getElementById('reference-date-picker');
+
+      function getStatusCssClass(status) {
+        switch (status) {
+            case '已過期': return 'expired';
+            case '警告': return 'warning';
+            default: return 'normal';
+        }
+      }
+
+      function calculateLifecycle(part, referenceDate) {
+        const { partName, partNumber, installDate, lifespan } = part;
+        const install = new Date(installDate);
+        let totalLifespanDays = 0;
+        
+        const yearMatch = lifespan.match(/(\d+)\s*年/);
+        const hourMatch = lifespan.match(/(\d+)\s*小時/);
+
+        if (yearMatch && yearMatch[1]) {
+            totalLifespanDays = parseFloat(yearMatch[1]) * 365.25;
+        } else if (hourMatch && hourMatch[1]) {
+            totalLifespanDays = parseFloat(hourMatch[1]) / 8;
+        }
+
+        const daysUsed = Math.floor((referenceDate.getTime() - install.getTime()) / (1000 * 60 * 60 * 24));
+        const daysRemaining = Math.floor(totalLifespanDays - daysUsed);
+        
+        const recommendedChangeDate = new Date(install);
+        recommendedChangeDate.setDate(recommendedChangeDate.getDate() + Math.round(totalLifespanDays));
+        
+        const percentageUsed = totalLifespanDays > 0 ? Math.min(100, (daysUsed / totalLifespanDays) * 100) : 100;
+
+        let status = '正常';
+        if (daysRemaining < 0) {
+            status = '已過期';
+        } else if (daysRemaining <= 182) {
+            status = '警告';
+        }
+
+        return {
+            partName,
+            modelNumber: partNumber,
+            installDate,
+            lifespan,
+            recommendedChangeDate: recommendedChangeDate.toISOString().split('T')[0].replace(/-/g, '/'),
+            status,
+            daysUsed: Math.max(0, daysUsed),
+            daysRemaining: daysRemaining,
+            totalLifespanDays: Math.round(totalLifespanDays),
+            percentageUsed: Math.max(0, percentageUsed),
+        };
+      }
+      
+      function updateLifecycleUI(referenceDate) {
+        const data = calculateLifecycle(partInfo, referenceDate);
+        const statusClass = getStatusCssClass(data.status);
+        
+        document.getElementById('lc-part-name').textContent = data.partName;
+        document.getElementById('lc-model-number').textContent = data.modelNumber;
+        document.getElementById('lc-install-date').textContent = data.installDate;
+        document.getElementById('lc-lifespan').textContent = data.lifespan;
+        document.getElementById('lc-change-date').textContent = data.recommendedChangeDate;
+        
+        const statusEl = document.getElementById('lc-status');
+        statusEl.textContent = data.status;
+        statusEl.className = 'status-' + statusClass;
+        
+        document.getElementById('lc-days-used-label').textContent = '已使用: ' + data.daysUsed + ' 天';
+        document.getElementById('lc-percentage-label').textContent = data.percentageUsed.toFixed(1) + '%';
+        document.getElementById('lc-days-remaining-label').textContent = '剩餘: ' + data.daysRemaining + ' 天';
+
+        const progressFillEl = document.getElementById('lc-progress-fill');
+        progressFillEl.style.width = data.percentageUsed + '%';
+        progressFillEl.className = 'progress-bar-fill status-bg-' + statusClass;
+      }
+
+      function initLifecycle() {
+        const today = new Date();
+        const todayString = today.toISOString().split('T')[0];
+        refDatePicker.value = todayString;
+        updateLifecycleUI(today);
+
+        refDatePicker.addEventListener('input', (e) => {
+            if (e.target.value) {
+                // Use T00:00:00 to ensure date is parsed in local timezone
+                const newRefDate = new Date(e.target.value + 'T00:00:00');
+                updateLifecycleUI(newRefDate);
+            }
+        });
+      }
+
+      initLifecycle();
+  
     });
   </script>
 </body>
