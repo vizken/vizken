@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>交易明細</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #fafafa;
+        }
+
+        h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #f5f5f5;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            cursor: pointer;
+            /* 讓使用者知道可以點 */
+        }
+
+        th.sort-asc::after {
+            content: " ▲";
+            font-size: 12px;
+        }
+
+        th.sort-desc::after {
+            content: " ▼";
+            font-size: 12px;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .scroll-container {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>資料庫交易明細</h2>
+
+    <div class="scroll-container">
+        <table id="transactionsTable">
+            <thead>
+                <tr>
+                    <th data-key="transaction_id">交易編號</th>
+                    <th data-key="part_code">料號</th>
+                    <th data-key="part_name">品名</th>
+                    <th data-key="quantity">數量</th>
+                    <th data-key="unit_price">單價</th>
+                    <th data-key="total_amount">金額</th>
+                    <th data-key="supplier_name">廠商</th>
+                    <th data-key="note">備註</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        const apikey = "AKfycbzevRx-C-RDxRV6GavRwV7N67oWdUhLJkOjkKH9irI1rm8hrlbUpClZTpBylEUIPaC2";
+        const apiLink = `https://script.google.com/macros/s/${apikey}/exec`;
+
+        // 全域暫存資料，避免每次排序都打 API
+        let transactionsData = [];
+        // 記錄目前排序狀態
+        let currentSort = {
+            key: null,      // 目前依照哪一個欄位排序
+            direction: 'asc' // 'asc' 或 'desc'
+        };
+
+        async function loadTransactions() {
+            try {
+                const res = await fetch(`${apiLink}?action=transactions`);
+                const result = await res.json();
+                const data = result.data || [];
+
+                // 更新全域資料
+                transactionsData = data.slice(); // 複製一份
+
+                // 預設顯示不排序（或你可以在這裡指定預設排序）
+                renderTable(transactionsData);
+            } catch (err) {
+                console.error('❌ 無法載入交易明細:', err);
+            }
+        }
+
+        function renderTable(data) {
+            const tbody = document.querySelector('#transactionsTable tbody');
+            tbody.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="8" style="text-align:center;color:#777;">目前無交易紀錄</td>`;
+                tbody.appendChild(row);
+                return;
+            }
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.transaction_id || ''}</td>
+                    <td>${item.part_code || ''}</td>
+                    <td>${item.part_name || ''}</td>
+                    <td>${item.quantity || 0}</td>
+                    <td>${item.unit_price || 0}</td>
+                    <td>${item.total_amount || 0}</td>
+                    <td>${item.supplier_name || '未指定廠商'}</td>
+                    <td>${item.note || ''}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 排序函式
+        function sortDataBy(key) {
+            if (!key || transactionsData.length === 0) return;
+
+            // 如果點到同一個欄位，就切換升冪 / 降冪
+            if (currentSort.key === key) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.key = key;
+                currentSort.direction = 'asc'; // 新欄位從升冪開始
+            }
+
+            const sorted = transactionsData.slice().sort((a, b) => {
+                let valA = a[key];
+                let valB = b[key];
+
+                // 處理 undefined / null
+                if (valA === undefined || valA === null) valA = '';
+                if (valB === undefined || valB === null) valB = '';
+
+                // 嘗試轉成數字
+                const numA = parseFloat(valA);
+                const numB = parseFloat(valB);
+                const isNumberA = !isNaN(numA) && valA !== '';
+                const isNumberB = !isNaN(numB) && valB !== '';
+
+                let compareResult = 0;
+
+                if (isNumberA && isNumberB) {
+                    // 數字排序
+                    compareResult = numA - numB;
+                } else {
+                    // 字串排序（統一轉字串比較）
+                    const strA = String(valA);
+                    const strB = String(valB);
+                    compareResult = strA.localeCompare(strB, 'zh-Hant');
+                }
+
+                return currentSort.direction === 'asc' ? compareResult : -compareResult;
+            });
+
+            // 更新表頭的箭頭樣式
+            updateHeaderSortIndicator();
+
+            // 重繪表格
+            renderTable(sorted);
+        }
+
+        function updateHeaderSortIndicator() {
+            const ths = document.querySelectorAll('#transactionsTable thead th');
+            ths.forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+                const key = th.getAttribute('data-key');
+                if (key && key === currentSort.key) {
+                    th.classList.add(currentSort.direction === 'asc' ? 'sort-asc' : 'sort-desc');
+                }
+            });
+        }
+
+        function initHeaderClickSort() {
+            const ths = document.querySelectorAll('#transactionsTable thead th');
+            ths.forEach(th => {
+                const key = th.getAttribute('data-key');
+                if (!key) return;
+
+                th.addEventListener('click', () => {
+                    sortDataBy(key);
+                });
+            });
+        }
+
+        // 初始化
+        loadTransactions();
+        initHeaderClickSort();
+
+        // 每 30 秒自動更新資料（更新後保留排序邏輯：可選擇要不要重排）
+        setInterval(async () => {
+            await loadTransactions();
+            // 如果目前有排序條件，更新資料後再依照原本條件排序一次
+            if (currentSort.key) {
+                sortDataBy(currentSort.key);
+            }
+        }, 30000);
+    </script>
+</body>
+
+</html>

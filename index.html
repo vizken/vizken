@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>堆高機Forklift</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Oswald&display=swap" rel="stylesheet">
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             height: 100%;
             overflow: hidden;
             font-family: 'Noto Sans TC', sans-serif;
         }
+
         .container {
             display: flex;
             flex-direction: column;
             height: 100%;
         }
-        .top, .bottom {
+
+        .top,
+        .bottom {
             flex: 0 0 10%;
             background-color: #f1f1f1;
             text-align: left;
@@ -26,40 +31,46 @@
             box-sizing: border-box;
             font-family: 'Oswald', sans-serif;
         }
+
         .middle {
             flex: 1;
             overflow: hidden;
         }
+
         iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
+
         .link {
             display: inline-block;
             margin: 0 10px;
         }
+
         h2 {
             display: inline;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="top">
-            <h2>Tailift</h2>    
-			<div class="link"><a href="Forklift/Pip_PU.html" target="content">堆高機</a></div>
-			<div class="link"><a href="List.html" target="content">List</a></div>
-	        <div class="link"><a href="Component/Component.html" target="content">Component</a></div>			
-	
-			<div class="link" style="text-align: right;">
+            <h2>Tailift</h2>
+            <div class="link"><a href="Forklift/Pip_PU.html" target="content">堆高機</a></div>
+            <div class="link"><a href="List.html" target="content">List</a></div>
+            <div class="link"><a href="Component/Component.html" target="content">Component</a></div>
+            <a href="OrderSystem/transaction.html" target="content">Transaction</a>
+            <div class="link" style="text-align: right;">
             </div>
 
-		
+
         </div>
         <div class="middle">
             <iframe src="List.html" name="content"></iframe>
         </div>
     </div>
 </body>
+
 </html>

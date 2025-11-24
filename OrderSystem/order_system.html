@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>零件訂購系統 | Tailift</title>
+  <style>
+    body {
+      background: linear-gradient(145deg, #0b1525, #1a263b);
+      color: #d4e3ff;
+      font-family: "Noto Sans TC", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .order-container {
+      background: rgba(20, 30, 48, 0.95);
+      border-radius: 18px;
+      box-shadow: 0 0 20px rgba(60, 120, 255, 0.3);
+      padding: 40px;
+      width: 420px;
+      text-align: center;
+      border: 1px solid rgba(80, 140, 255, 0.4);
+    }
+
+    .order-container h1 {
+      margin-bottom: 25px;
+      font-size: 22px;
+      color: #e2ecff;
+    }
+
+    #info p {
+      margin: 6px 0;
+    }
+
+    form {
+      margin-top: 25px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #a7c1ff;
+    }
+
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #3b6cff;
+      background: rgba(10, 20, 35, 0.8);
+      color: #d4e3ff;
+      font-size: 15px;
+    }
+
+    textarea {
+      height: 80px;
+      resize: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 22px;
+      border-radius: 10px;
+      border: 1px solid #3b6cff;
+      background: linear-gradient(145deg, #243b55, #141e30);
+      color: #bcdcff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 10px rgba(66, 150, 255, 0.3);
+    }
+
+    button:hover {
+      background: linear-gradient(145deg, #1f2b44, #0f1828);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(90, 160, 255, 0.6);
+      transform: scale(1.05);
+    }
+
+    #msg {
+      margin-top: 15px;
+      color: #93c6ff;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="order-container">
+    <h1>零件訂購系統</h1>
+    <div id="info">載入中...</div>
+
+    <form id="orderForm">
+      <div class="form-group">
+        <label for="quantity">數量：</label><br>
+        <input type="number" id="quantity" min="1" required />
+      </div>
+      <div class="form-group">
+        <label for="note">備註：</label><br>
+        <textarea id="note" rows="3" placeholder="可輸入備註..."></textarea>
+      </div>
+      <button type="submit">送出訂單</button>
+      <button type="button" id="backBtn">返回上一頁</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    const apikey = "AKfycbzevRx-C-RDxRV6GavRwV7N67oWdUhLJkOjkKH9irI1rm8hrlbUpClZTpBylEUIPaC2";
+    const apiLink = `https://script.google.com/macros/s/${apikey}/exec`;
+    const params = new URLSearchParams(window.location.search);
+    const partCode = params.get("part_code");
+    const infoDiv = document.getElementById("info");
+
+    // 從父畫面補資料（Component.html）
+    function getFallbackInfo() {
+      try {
+        const parentDoc = window.parent.document;
+        const nameEl = parentDoc.querySelector(".part-name, .partName, #partName");
+        const codeEl = parentDoc.querySelector(".part-code, .partCode, #partCode");
+        return {
+          part_name: nameEl ? nameEl.textContent.trim() : "",
+          part_code: codeEl ? codeEl.textContent.trim() : partCode
+        };
+      } catch {
+        return { part_name: "", part_code: partCode };
+      }
+    }
+
+    async function loadPartInfo() {
+      let data = {};
+      try {
+        const res = await fetch(`${apiLink}?part_code=${encodeURIComponent(partCode)}`);
+        if (res.ok) result = await res.json();
+        data = result.data
+      } catch { }
+
+      const fallback = getFallbackInfo();
+      const code = fallback.part_code || partCode || "（資料庫查無資訊）";
+      const name = data.part_name || fallback.part_name || "（資料庫查無資訊）";
+      const supplier = data.supplier_name || "（資料庫查無資訊）";
+      const price = data.latest_price ? `NT$ ${data.latest_price}` : "（資料庫查無資訊）";
+      const stock = data.stock ? data.stock : "（資料庫查無資訊）";
+
+      infoDiv.innerHTML = `
+    <p><strong>零件編號：</strong>${code}</p>
+    <p><strong>零件名稱：</strong>${name}</p>
+    <p><strong>供應商：</strong>${supplier}</p>
+    <p><strong>最新單價：</strong>${price}</p>
+    <p><strong>目前庫存：</strong>${stock}</p>
+  `;
+    }
+
+    document.getElementById("orderForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {
+        part_code: partCode,
+        quantity: parseInt(document.getElementById("quantity").value),
+        note: document.getElementById("note").value.trim()
+      };
+      const res = await fetch(`${apiLink}`, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const msg = document.getElementById("msg");
+      //console.log(res);
+      //if (res.ok) {
+      msg.innerHTML = "✅ 訂單成功送出，庫存已更新";
+      document.getElementById("orderForm").reset();
+      loadPartInfo();
+      //} else {
+      //  msg.innerHTML = "❌ 發生錯誤，請稍後再試";
+      //}
+    });
+
+    loadPartInfo();
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.history.back();
+    });
+
+  </script>
+</body>
+
+</html>
