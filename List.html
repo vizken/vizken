@@ -338,11 +338,11 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 200px;">零件名稱 / 型號</th>
-                                <th style="width: 60px;">安裝日期</th>
-                                <th style="width: 60px">壽命週期</th>
-                                <th style="width: 10%">狀態</th>
-                                <th style="width: 10%">使用進度</th>
+                                <th style="width: 35%;">零件名稱 / 型號</th>
+                                <th style="width: 10%;">安裝日期</th>
+                                <th style="width: 10%">壽命週期</th>
+                                <th style="width: 15%">狀態</th>
+                                <th style="width: 15%">使用進度</th>
                                 <th style="width: 10%">剩餘 / 建議更換</th>
                             </tr>
                         </thead>
@@ -1162,16 +1162,16 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                        <img alt="" src="Component/original/3018678.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
-                                        <div>
-                                            <span class="primary-text">減震墊</span>
-                                            <span class="secondary-text">3018678</span>
-                                        </div>
-                                    </div>
-                                </td>
+                              <td onclick="openPartInFrame('3018678')" style="cursor:pointer;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <img alt="" src="Component/original/3018678.jpg"
+            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+        <div>
+            <span class="primary-text">減震墊</span>
+            <span class="secondary-text">3018678</span>
+        </div>
+    </div>
+</td>
                                 <td>2023/10/3</td>
                                 <td>6年</td>
                                 <td>
@@ -1492,32 +1492,38 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td onclick="openPartInFrame('3012008-S01')" style="cursor:pointer;">
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                        <img alt="" src="Component/original/3012008-S01.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
-                                        <span class="primary-text">副水箱</span>
-                                        <span class="secondary-text">3012008-S01</span>
-                                    </div>
-                </div>
-                </td>
-                <td>2023/10/3</td>
-                <td>6年</td>
-                <td>
-                    <span class="status-badge badge-success">正常</span>
-                </td>
-                <td>
-                    <div class="progress-container">
-                        <div class="progress-bar-bg">
-                            <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
-                        </div>
-                        <div class="progress-text">已用 782 天 (35.7%)</div>
-                    </div>
-                </td>
-                <td>
-                    <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
-                    <div class="secondary-text">建議: 2029/10/02</div>
-                </td>
+    <td onclick="openPartInFrame('3012008-S01')" style="cursor:pointer;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img alt="" src="Component/original/3012008-S01.jpg"
+                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+            <div>
+                <span class="primary-text">副水箱</span>
+                <span class="secondary-text">3012008-S01</span>
+            </div>
+        </div>
+    </td>
+
+    <td>2023/10/3</td>
+    <td>6年</td>
+
+    <td>
+        <span class="status-badge badge-success">正常</span>
+    </td>
+
+    <td>
+        <div class="progress-container">
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
+            </div>
+            <div class="progress-text">已用 782 天 (35.7%)</div>
+        </div>
+    </td>
+
+    <td>
+        <div style="color: var(--text-primary); margin-bottom: 4px;">1409 天</div>
+        <div class="secondary-text">建議: 2029/10/02</div>
+    </td>
+</tr>
                 </tr>
                 <tr>
                     <td onclick="openPartInFrame('3012608')" style="cursor:pointer;">
@@ -3333,7 +3339,7 @@
 
                 var tdOrder = document.createElement('td');
                 tdOrder.setAttribute('onclick', "orderSystem('" + code + "')");
-                tdOrder.setAttribute('style', 'width: 90px; text-align: center; cursor: pointer;');
+                tdOrder.setAttribute('style', 'width: 70px; text-align: center; cursor: pointer;');
                 var btn = document.createElement('button');
                 btn.className = 'order-button';
                 btn.textContent = '訂購';
