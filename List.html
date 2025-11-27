@@ -61,7 +61,7 @@
         .header h1 {
             margin: 0;
             font-size: 24px;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .header .subtitle {
@@ -338,12 +338,12 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 240px;">零件名稱 / 型號</th>
-                                <th style="width: 100px">安裝日期</th>
-                                <th style="width: 100px">壽命週期</th>
-                                <th style="width: 100px">狀態</th>
-                                <th style="width: 100px">使用進度</th>
-                                <th style="width: 100px">剩餘 / 建議更換</th>
+                                <th style="width: 150px;">零件名稱 / 型號</th>
+                                <th style="width: 80px">安裝日期</th>
+                                <th style="width: 80px">壽命週期</th>
+                                <th style="width: 80px">狀態</th>
+                                <th style="width: 80px">使用進度</th>
+                                <th style="width: 60px">剩餘 / 建議更換</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -3333,7 +3333,7 @@
 
                 var tdOrder = document.createElement('td');
                 tdOrder.setAttribute('onclick', "orderSystem('" + code + "')");
-                tdOrder.setAttribute('style', 'width: 100px; text-align: center; cursor: pointer;');
+                tdOrder.setAttribute('style', 'width: 90px; text-align: center; cursor: pointer;');
                 var btn = document.createElement('button');
                 btn.className = 'order-button';
                 btn.textContent = '訂購';
