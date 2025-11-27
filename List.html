@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>零件生命週期報表 - 2025-11-22</title>
+    <title id="pageTitle">零件生命週期報表</title>
     <style>
         .order-button {
             padding: 10px 20px;
@@ -45,7 +45,7 @@
         }
 
         .container {
-            max-width: 700px;
+            max-width: 750px;
             margin: 0 auto;
         }
 
@@ -243,6 +243,76 @@
             color: var(--text-muted);
         }
 
+        /* Date Picker Styles */
+        .date-picker {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .date-picker:hover {
+            border-color: #0A74DA;
+            background-color: rgba(10, 116, 218, 0.1);
+        }
+
+        .date-picker:focus {
+            outline: none;
+            border-color: #0A74DA;
+            box-shadow: 0 0 0 3px rgba(10, 116, 218, 0.2);
+        }
+
+        /* 日期選擇器的日曆樣式 */
+        .date-picker::-webkit-calendar-picker-indicator {
+            filter: invert(0.7);
+            cursor: pointer;
+        }
+
+        .date-picker::-webkit-calendar-picker-indicator:hover {
+            filter: invert(1);
+        }
+
+        /* 表格內的日期選擇器樣式 */
+        .install-date-picker {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .install-date-picker:hover {
+            border-color: var(--border-color);
+            background-color: rgba(55, 65, 81, 0.4);
+        }
+
+        .install-date-picker:focus {
+            outline: none;
+            border-color: #0A74DA;
+            background-color: rgba(10, 116, 218, 0.1);
+        }
+
+        .install-date-picker::-webkit-calendar-picker-indicator {
+            filter: invert(0.6);
+            cursor: pointer;
+            opacity: 0.5;
+        }
+
+        .install-date-picker:hover::-webkit-calendar-picker-indicator {
+            opacity: 1;
+            filter: invert(0.8);
+        }
+
         @media print {
             body {
                 background-color: #fff;
@@ -312,8 +382,7 @@
                         <div class="subtitle">Break Down 3D Viewer Life Cycle Report</div>
                     </div>
                     <div class="meta">
-                        產出日期: 2025-11-22<br />
-                        計算基準: 2025-11-22
+                        計算基準: <input type="date" id="baseDate" class="date-picker" />
                     </div>
                 </div>
                 <div class="summary-grid">
@@ -339,7 +408,7 @@
                         <thead>
                             <tr>
                                 <th style="width: 35%;">零件名稱 / 型號</th>
-                                <th style="width: 10%;">安裝日期</th>
+                                <th style="width: 20px;">安裝日期</th>
                                 <th style="width: 10%">壽命週期</th>
                                 <th style="width: 15%">狀態</th>
                                 <th style="width: 15%">使用進度</th>
@@ -358,12 +427,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>2年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">2年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-danger">已過期</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-danger" style="width: 100%"></div>
@@ -371,7 +440,7 @@
                                         <div class="progress-text">已用 782 天 (100.0%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--color-danger); font-weight: 700;; margin-bottom: 4px;">-52
                                         天</div>
                                     <div class="secondary-text">建議: 2025/10/02</div>
@@ -388,12 +457,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2025/6/25</td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2025-06-25" data-original="2025/6/25" onchange="updatePartLifecycle(this)" /></td>
                                 <td>1000公里</td>
-                                <td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-warning">警告</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-warning" style="width: 82.5136612021858%">
@@ -402,7 +471,7 @@
                                         <div class="progress-text">已用 151 天 (82.5%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">32 天</div>
                                     <div class="secondary-text">建議: 2025/12/24</div>
                                 </td>
@@ -422,12 +491,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2025/6/25</td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2025-06-25" data-original="2025/6/25" onchange="updatePartLifecycle(this)" /></td>
                                 <td>1000公里</td>
-                                <td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-warning">警告</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-warning" style="width: 82.5136612021858%">
@@ -436,7 +505,7 @@
                                         <div class="progress-text">已用 151 天 (82.5%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">32 天</div>
                                     <div class="secondary-text">建議: 2025/12/24</div>
                                 </td>
@@ -452,12 +521,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2025/6/25</td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2025-06-25" data-original="2025/6/25" onchange="updatePartLifecycle(this)" /></td>
                                 <td>1000公里</td>
-                                <td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-warning">警告</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-warning" style="width: 82.5136612021858%">
@@ -466,7 +535,7 @@
                                         <div class="progress-text">已用 151 天 (82.5%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">32 天</div>
                                     <div class="secondary-text">建議: 2025/12/24</div>
                                 </td>
@@ -482,12 +551,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2025/6/25</td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2025-06-25" data-original="2025/6/25" onchange="updatePartLifecycle(this)" /></td>
                                 <td>1000公里</td>
-                                <td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-warning">警告</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-warning" style="width: 82.5136612021858%">
@@ -496,7 +565,7 @@
                                         <div class="progress-text">已用 151 天 (82.5%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">32 天</div>
                                     <div class="secondary-text">建議: 2025/12/24</div>
                                 </td>
@@ -512,12 +581,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2025/6/25</td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2025-06-25" data-original="2025/6/25" onchange="updatePartLifecycle(this)" /></td>
                                 <td>1000公里</td>
-                                <td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-warning">警告</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-warning" style="width: 82.5136612021858%">
@@ -526,7 +595,7 @@
                                         <div class="progress-text">已用 151 天 (82.5%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">32 天</div>
                                     <div class="secondary-text">建議: 2025/12/24</div>
                                 </td>
@@ -542,12 +611,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2025/6/25</td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2025-06-25" data-original="2025/6/25" onchange="updatePartLifecycle(this)" /></td>
                                 <td>1000公里</td>
-                                <td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-warning">警告</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-warning" style="width: 82.5136612021858%">
@@ -556,7 +625,7 @@
                                         <div class="progress-text">已用 151 天 (82.5%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">32 天</div>
                                     <div class="secondary-text">建議: 2025/12/24</div>
                                 </td>
@@ -572,12 +641,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -586,7 +655,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -602,12 +671,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -616,7 +685,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -632,12 +701,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -646,7 +715,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -662,12 +731,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -676,7 +745,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -692,12 +761,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -706,7 +775,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -722,12 +791,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -736,7 +805,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -752,12 +821,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -766,7 +835,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -782,12 +851,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -796,7 +865,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -812,12 +881,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -826,7 +895,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -842,12 +911,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -856,7 +925,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -872,12 +941,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -886,7 +955,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -902,12 +971,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -916,7 +985,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -932,12 +1001,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -946,7 +1015,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -962,12 +1031,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -976,7 +1045,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -992,12 +1061,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1006,7 +1075,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1022,12 +1091,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2025/10/3</td>
-                                <td>2年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2025-10-03" data-original="2025/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">2年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 6.981519507186857%">
@@ -1036,7 +1105,7 @@
                                         <div class="progress-text">已用 51 天 (7.0%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">679 天</div>
                                     <div class="secondary-text">建議: 2027/10/03</div>
                                 </td>
@@ -1052,12 +1121,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1066,7 +1135,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1082,12 +1151,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1096,7 +1165,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1112,12 +1181,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1126,7 +1195,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1142,12 +1211,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1156,7 +1225,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1172,12 +1241,12 @@
         </div>
     </div>
 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1186,7 +1255,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1202,12 +1271,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1216,7 +1285,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1232,12 +1301,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1246,7 +1315,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1262,12 +1331,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1276,7 +1345,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1292,12 +1361,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1306,7 +1375,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1322,12 +1391,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1336,7 +1405,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1352,12 +1421,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1366,7 +1435,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1382,12 +1451,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1396,7 +1465,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1412,12 +1481,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1426,7 +1495,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1442,12 +1511,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1456,7 +1525,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1472,12 +1541,12 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023/10/3</td>
-                                <td>6年</td>
-                                <td>
+                                <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                                <td class="lifecycle">6年</td>
+                                <td class="status-cell">
                                     <span class="status-badge badge-success">正常</span>
                                 </td>
-                                <td>
+                                <td class="progress-cell">
                                     <div class="progress-container">
                                         <div class="progress-bar-bg">
                                             <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%">
@@ -1486,7 +1555,7 @@
                                         <div class="progress-text">已用 782 天 (35.7%)</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="remaining-cell">
                                     <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                                     <div class="secondary-text">建議: 2029/10/02</div>
                                 </td>
@@ -1503,15 +1572,15 @@
         </div>
     </td>
 
-    <td>2023/10/3</td>
-    <td>6年</td>
+    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+    <td class="lifecycle">6年</td>
 
-    <td>
-        <span class="status-badge badge-success">正常</span>
+    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
     </td>
 
-    <td>
-        <div class="progress-container">
+    <td class="progress-cell">
+                                    <div class="progress-container">
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
             </div>
@@ -1519,7 +1588,7 @@
         </div>
     </td>
 
-    <td>
+    <td class="remaining-cell">
         <div style="color: var(--text-primary); margin-bottom: 4px;">1409 天</div>
         <div class="secondary-text">建議: 2029/10/02</div>
     </td>
@@ -1536,20 +1605,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1565,20 +1634,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1594,20 +1663,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1623,20 +1692,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2024/03/04</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2024-03-04" data-original="2024/03/04" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 28.701802418434863%"></div>
                             </div>
                             <div class="progress-text">已用 629 天 (28.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1562 天</div>
                         <div class="secondary-text">建議: 2030/03/04</div>
                     </td>
@@ -1652,20 +1721,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2024/10/3</td>
-                    <td>3年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2024-10-03" data-original="2024/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">3年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 37.964864248231805%"></div>
                             </div>
                             <div class="progress-text">已用 416 天 (38.0%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">679 天</div>
                         <div class="secondary-text">建議: 2027/10/03</div>
                     </td>
@@ -1681,20 +1750,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>3年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">3年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 71.36664385124344%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (71.4%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">313 天</div>
                         <div class="secondary-text">建議: 2026/10/02</div>
                     </td>
@@ -1710,20 +1779,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1739,20 +1808,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1768,20 +1837,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1797,20 +1866,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1826,20 +1895,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1855,20 +1924,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1884,20 +1953,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1913,20 +1982,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1942,20 +2011,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -1971,20 +2040,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2000,20 +2069,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2029,20 +2098,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2058,20 +2127,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2087,20 +2156,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2116,20 +2185,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2145,20 +2214,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2174,20 +2243,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2203,20 +2272,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2232,20 +2301,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2261,20 +2330,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2290,20 +2359,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2319,20 +2388,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2348,20 +2417,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2377,20 +2446,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2406,20 +2475,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2435,20 +2504,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>3年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">3年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 71.36664385124344%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (71.4%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">313 天</div>
                         <div class="secondary-text">建議: 2026/10/02</div>
                     </td>
@@ -2464,20 +2533,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2024/10/3</td>
-                    <td>3年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2024-10-03" data-original="2024/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">3年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 37.964864248231805%"></div>
                             </div>
                             <div class="progress-text">已用 416 天 (38.0%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">679 天</div>
                         <div class="secondary-text">建議: 2027/10/03</div>
                     </td>
@@ -2493,20 +2562,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2522,20 +2591,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2551,20 +2620,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2580,20 +2649,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2609,20 +2678,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2638,20 +2707,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2667,20 +2736,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2696,20 +2765,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2725,20 +2794,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2754,20 +2823,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2783,20 +2852,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2812,20 +2881,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2841,20 +2910,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2870,20 +2939,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2899,20 +2968,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2928,20 +2997,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2957,20 +3026,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -2986,20 +3055,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -3015,20 +3084,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -3044,20 +3113,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -3073,20 +3142,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -3102,20 +3171,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -3131,20 +3200,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -3160,20 +3229,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -3189,20 +3258,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -3218,20 +3287,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -3247,20 +3316,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -3276,20 +3345,20 @@
                             </div>
                         </div>
                     </td>
-                    <td>2023/10/3</td>
-                    <td>6年</td>
-                    <td>
-                        <span class="status-badge badge-success">正常</span>
+                    <td class="install-date"><input type="date" class="install-date-picker" value="2023-10-03" data-original="2023/10/3" onchange="updatePartLifecycle(this)" /></td>
+                    <td class="lifecycle">6年</td>
+                    <td class="status-cell">
+                                    <span class="status-badge badge-success">正常</span>
                     </td>
-                    <td>
-                        <div class="progress-container">
+                    <td class="progress-cell">
+                                    <div class="progress-container">
                             <div class="progress-bar-bg">
                                 <div class="progress-bar-fill bg-success" style="width: 35.68332192562172%"></div>
                             </div>
                             <div class="progress-text">已用 782 天 (35.7%)</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="remaining-cell">
                         <div style="color: var(--text-primary);; margin-bottom: 4px;">1409 天</div>
                         <div class="secondary-text">建議: 2029/10/02</div>
                     </td>
@@ -3321,7 +3390,328 @@
             window.open(url, "_blank");
         }
 
+        // 更新單個零件的生命週期（當安裝日期變更時）
+        function updatePartLifecycle(inputElement) {
+            const row = inputElement.closest('tr');
+            if (!row) return;
+            
+            const baseDateInput = document.getElementById('baseDate');
+            const baseDate = new Date(baseDateInput.value);
+            
+            // 取得新的安裝日期
+            const newInstallDate = new Date(inputElement.value);
+            
+            // 取得壽命週期
+            const lifecycleCell = row.querySelector('.lifecycle');
+            if (!lifecycleCell) return;
+            
+            const lifecycleText = lifecycleCell.textContent.trim();
+            
+            // 跳過非年份單位的零件
+            if (!lifecycleText.includes('年')) {
+                return;
+            }
+            
+            const lifecycleYears = parseInt(lifecycleText);
+            const lifecycleDays = lifecycleYears * 365;
+            
+            // 計算已使用天數
+            const usedDays = daysBetween(newInstallDate, baseDate);
+            
+            // 計算進度百分比
+            const progressPercent = Math.min((usedDays / lifecycleDays) * 100, 100);
+            
+            // 計算剩餘天數
+            const remainingDays = lifecycleDays - usedDays;
+            
+            // 計算建議更換日期
+            const recommendDate = new Date(newInstallDate);
+            recommendDate.setDate(recommendDate.getDate() + lifecycleDays);
+            
+            // 更新進度條
+            const progressCell = row.querySelector('.progress-cell');
+            if (progressCell) {
+                const progressFill = progressCell.querySelector('.progress-bar-fill');
+                const progressText = progressCell.querySelector('.progress-text');
+                
+                progressFill.style.width = `${progressPercent}%`;
+                progressText.textContent = `已用 ${usedDays} 天 (${progressPercent.toFixed(1)}%)`;
+                
+                // 更新進度條顏色
+                progressFill.className = 'progress-bar-fill';
+                if (progressPercent >= 100) {
+                    progressFill.classList.add('bg-danger');
+                } else if (progressPercent >= 80) {
+                    progressFill.classList.add('bg-warning');
+                } else {
+                    progressFill.classList.add('bg-success');
+                }
+            }
+            
+            // 更新狀態標籤
+            const statusCell = row.querySelector('.status-cell');
+            if (statusCell) {
+                const statusBadge = statusCell.querySelector('.status-badge');
+                statusBadge.className = 'status-badge';
+                
+                if (remainingDays < 0) {
+                    statusBadge.classList.add('badge-danger');
+                    statusBadge.textContent = '已過期';
+                } else if (progressPercent >= 80) {
+                    statusBadge.classList.add('badge-warning');
+                    statusBadge.textContent = '警告';
+                } else {
+                    statusBadge.classList.add('badge-success');
+                    statusBadge.textContent = '正常';
+                }
+            }
+            
+            // 更新剩餘/建議更換欄位
+            const remainingCell = row.querySelector('.remaining-cell');
+            if (remainingCell) {
+                let colorStyle = 'color: var(--text-primary);';
+                if (remainingDays < 0) {
+                    colorStyle = 'color: var(--color-danger); font-weight: 700;';
+                } else if (progressPercent >= 80) {
+                    colorStyle = 'color: var(--color-warning); font-weight: 700;';
+                }
+                
+                remainingCell.innerHTML = `
+                    <div style="${colorStyle} margin-bottom: 4px;">${remainingDays} 天</div>
+                    <div class="secondary-text">建議: ${formatDate(recommendDate)}</div>
+                `;
+            }
+            
+            // 重新計算統計數字
+            recalculateStatistics();
+        }
+
+        // 重新計算統計數字
+        function recalculateStatistics() {
+            const rows = document.querySelectorAll('tbody tr');
+            let normalCount = 0;
+            let warningCount = 0;
+            let expiredCount = 0;
+            
+            rows.forEach(row => {
+                const statusBadge = row.querySelector('.status-badge');
+                if (statusBadge) {
+                    if (statusBadge.classList.contains('badge-danger')) {
+                        expiredCount++;
+                    } else if (statusBadge.classList.contains('badge-warning')) {
+                        warningCount++;
+                    } else if (statusBadge.classList.contains('badge-success')) {
+                        normalCount++;
+                    }
+                }
+            });
+            
+            updateSummaryCards(rows.length, normalCount, warningCount, expiredCount);
+        }
+
+        // 設定今日日期
+        function setTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            
+            // 更新頁面標題
+            document.title = `零件生命週期報表 - ${formattedDate}`;
+            
+            // 設定計算基準日期選擇器的預設值為今日
+            const baseDateInput = document.getElementById('baseDate');
+            baseDateInput.value = formattedDate;
+            
+            // 監聽日期選擇器的變更
+            baseDateInput.addEventListener('change', function() {
+                console.log('計算基準日期已更改為:', this.value);
+                recalculateAllParts(this.value);
+            });
+        }
+
+        // 解析日期字串 (支援 YYYY/M/D 和 YYYY-MM-DD 格式)
+        function parseDate(dateStr) {
+            const parts = dateStr.replace(/\//g, '-').split('-');
+            return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        }
+
+        // 格式化日期為 YYYY/MM/DD
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            return `${year}/${month}/${day}`;
+        }
+
+        // 計算兩個日期之間的天數差
+        function daysBetween(date1, date2) {
+            const oneDay = 24 * 60 * 60 * 1000;
+            return Math.round((date2 - date1) / oneDay);
+        }
+
+        // 重新計算所有零件的生命週期
+        function recalculateAllParts(baseDateStr) {
+            const baseDate = new Date(baseDateStr);
+            const rows = document.querySelectorAll('tbody tr');
+            
+            console.log('重新計算，基準日期:', baseDateStr, '共', rows.length, '個零件');
+            
+            let normalCount = 0;
+            let warningCount = 0;
+            let expiredCount = 0;
+            
+            rows.forEach((row, index) => {
+                // 取得安裝日期
+                const installDateCell = row.querySelector('.install-date');
+                if (!installDateCell) {
+                    console.log(`第 ${index} 行: 找不到 install-date`);
+                    return;
+                }
+                
+                // 從 input 元素讀取日期值
+                const installDateInput = installDateCell.querySelector('.install-date-picker');
+                if (!installDateInput) {
+                    console.log(`第 ${index} 行: 找不到 install-date-picker`);
+                    return;
+                }
+                
+                const installDateStr = installDateInput.value; // YYYY-MM-DD 格式
+                if (!installDateStr) {
+                    console.log(`第 ${index} 行: 日期值為空`);
+                    return;
+                }
+                
+                const installDate = new Date(installDateStr);
+                if (isNaN(installDate.getTime())) {
+                    console.log(`第 ${index} 行: 無效的日期 ${installDateStr}`);
+                    return;
+                }
+                
+                // 取得壽命週期（年）
+                const lifecycleCell = row.querySelector('.lifecycle');
+                if (!lifecycleCell) return;
+                
+                const lifecycleText = lifecycleCell.textContent.trim();
+                
+                // 跳過非年份單位的零件（如公里數）
+                if (!lifecycleText.includes('年')) {
+                    // 這些零件保持原始狀態，只計算統計數字
+                    const statusBadge = row.querySelector('.status-badge');
+                    if (statusBadge) {
+                        if (statusBadge.classList.contains('badge-danger')) {
+                            expiredCount++;
+                        } else if (statusBadge.classList.contains('badge-warning')) {
+                            warningCount++;
+                        } else {
+                            normalCount++;
+                        }
+                    }
+                    return;
+                }
+                
+                const lifecycleYears = parseInt(lifecycleText);
+                const lifecycleDays = lifecycleYears * 365;
+                
+                // 計算已使用天數
+                const usedDays = daysBetween(installDate, baseDate);
+                
+                // 計算進度百分比
+                const progressPercent = Math.min((usedDays / lifecycleDays) * 100, 100);
+                
+                // 計算剩餘天數
+                const remainingDays = lifecycleDays - usedDays;
+                
+                // 計算建議更換日期
+                const recommendDate = new Date(installDate);
+                recommendDate.setDate(recommendDate.getDate() + lifecycleDays);
+                
+                // 更新進度條
+                const progressCell = row.querySelector('.progress-cell');
+                if (progressCell) {
+                    const progressFill = progressCell.querySelector('.progress-bar-fill');
+                    const progressText = progressCell.querySelector('.progress-text');
+                    
+                    progressFill.style.width = `${progressPercent}%`;
+                    progressText.textContent = `已用 ${usedDays} 天 (${progressPercent.toFixed(1)}%)`;
+                    
+                    // 更新進度條顏色
+                    progressFill.className = 'progress-bar-fill';
+                    if (progressPercent >= 100) {
+                        progressFill.classList.add('bg-danger');
+                    } else if (progressPercent >= 80) {
+                        progressFill.classList.add('bg-warning');
+                    } else {
+                        progressFill.classList.add('bg-success');
+                    }
+                }
+                
+                // 更新狀態標籤
+                const statusCell = row.querySelector('.status-cell');
+                if (statusCell) {
+                    const statusBadge = statusCell.querySelector('.status-badge');
+                    statusBadge.className = 'status-badge';
+                    
+                    if (remainingDays < 0) {
+                        statusBadge.classList.add('badge-danger');
+                        statusBadge.textContent = '已過期';
+                        expiredCount++;
+                    } else if (progressPercent >= 80) {
+                        statusBadge.classList.add('badge-warning');
+                        statusBadge.textContent = '警告';
+                        warningCount++;
+                    } else {
+                        statusBadge.classList.add('badge-success');
+                        statusBadge.textContent = '正常';
+                        normalCount++;
+                    }
+                }
+                
+                // 更新剩餘/建議更換欄位
+                const remainingCell = row.querySelector('.remaining-cell');
+                if (remainingCell) {
+                    let colorStyle = 'color: var(--text-primary);';
+                    if (remainingDays < 0) {
+                        colorStyle = 'color: var(--color-danger); font-weight: 700;';
+                    } else if (progressPercent >= 80) {
+                        colorStyle = 'color: var(--color-warning); font-weight: 700;';
+                    }
+                    
+                    remainingCell.innerHTML = `
+                        <div style="${colorStyle} margin-bottom: 4px;">${remainingDays} 天</div>
+                        <div class="secondary-text">建議: ${formatDate(recommendDate)}</div>
+                    `;
+                }
+            });
+            
+            // 更新統計卡片
+            updateSummaryCards(rows.length, normalCount, warningCount, expiredCount);
+        }
+
+        // 更新統計卡片
+        function updateSummaryCards(total, normal, warning, expired) {
+            const cards = document.querySelectorAll('.card');
+            if (cards.length >= 4) {
+                cards[0].querySelector('.card-value').textContent = total;
+                cards[1].querySelector('.card-value').textContent = normal;
+                cards[2].querySelector('.card-value').textContent = warning;
+                cards[3].querySelector('.card-value').textContent = expired;
+            }
+        }
+
+        // 頁面載入時執行
         document.addEventListener('DOMContentLoaded', function () {
+            // 設定今日日期和初始化
+            setTodayDate();
+            
+            // 進行初始計算
+            const baseDateInput = document.getElementById('baseDate');
+            if (baseDateInput && baseDateInput.value) {
+                recalculateAllParts(baseDateInput.value);
+            }
+            
+            // 添加訂購按鈕
             document.querySelectorAll('td[onclick]').forEach(function (td) {
                 var onclick = td.getAttribute('onclick') || '';
                 var m = onclick.match(/openPartInFrame\(['"]([^'"]+)['"]\)/);
