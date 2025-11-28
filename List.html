@@ -408,7 +408,7 @@
                         <thead>
                             <tr>
                                 <th style="width: 35%;">零件名稱 / 型號</th>
-                                <th style="width: 20px;">安裝日期</th>
+                                <th style="width: 10%;">安裝日期</th>
                                 <th style="width: 10%">壽命週期</th>
                                 <th style="width: 15%">狀態</th>
                                 <th style="width: 15%">使用進度</th>
@@ -3488,7 +3488,7 @@
 
         // 重新計算統計數字
         function recalculateStatistics() {
-            const rows = document.querySelectorAll('tbody tr');
+            const rows = document.querySelectorAll('.table-container tbody tr');
             let normalCount = 0;
             let warningCount = 0;
             let expiredCount = 0;
@@ -3529,6 +3529,37 @@
                 console.log('計算基準日期已更改為:', this.value);
                 recalculateAllParts(this.value);
             });
+            
+            // 初次載入時，計算並更新統計數字（但不更新表格內容）
+            updateInitialStatistics();
+        }
+
+        // 初次載入時更新統計數字（基於現有的狀態標籤）
+        function updateInitialStatistics() {
+            const rows = document.querySelectorAll('.table-container tbody tr');
+            let normalCount = 0;
+            let warningCount = 0;
+            let expiredCount = 0;
+            
+            console.log('開始統計，總共', rows.length, '個零件');
+            
+            rows.forEach((row, index) => {
+                const statusBadge = row.querySelector('.status-badge');
+                if (statusBadge) {
+                    if (statusBadge.classList.contains('badge-danger')) {
+                        expiredCount++;
+                    } else if (statusBadge.classList.contains('badge-warning')) {
+                        warningCount++;
+                    } else if (statusBadge.classList.contains('badge-success')) {
+                        normalCount++;
+                    }
+                } else {
+                    console.log(`第 ${index} 行沒有狀態標籤`);
+                }
+            });
+            
+            console.log('統計結果:', { total: rows.length, normal: normalCount, warning: warningCount, expired: expiredCount, sum: normalCount + warningCount + expiredCount });
+            updateSummaryCards(rows.length, normalCount, warningCount, expiredCount);
         }
 
         // 解析日期字串 (支援 YYYY/M/D 和 YYYY-MM-DD 格式)
@@ -3554,7 +3585,7 @@
         // 重新計算所有零件的生命週期
         function recalculateAllParts(baseDateStr) {
             const baseDate = new Date(baseDateStr);
-            const rows = document.querySelectorAll('tbody tr');
+            const rows = document.querySelectorAll('.table-container tbody tr');
             
             console.log('重新計算，基準日期:', baseDateStr, '共', rows.length, '個零件');
             
@@ -3562,52 +3593,69 @@
             let warningCount = 0;
             let expiredCount = 0;
             
+            // 輔助函數：統計當前狀態（不重新計算）
+            function countCurrentStatus(row) {
+                const statusBadge = row.querySelector('.status-badge');
+                if (statusBadge) {
+                    if (statusBadge.classList.contains('badge-danger')) {
+                        expiredCount++;
+                    } else if (statusBadge.classList.contains('badge-warning')) {
+                        warningCount++;
+                    } else if (statusBadge.classList.contains('badge-success')) {
+                        normalCount++;
+                    }
+                }
+            }
+            
             rows.forEach((row, index) => {
                 // 取得安裝日期
                 const installDateCell = row.querySelector('.install-date');
                 if (!installDateCell) {
-                    console.log(`第 ${index} 行: 找不到 install-date`);
+                    console.log(`第 ${index} 行: 找不到 install-date，保留原始狀態`);
+                    // 計入統計但不重新計算
+                    countCurrentStatus(row);
                     return;
                 }
                 
                 // 從 input 元素讀取日期值
                 const installDateInput = installDateCell.querySelector('.install-date-picker');
                 if (!installDateInput) {
-                    console.log(`第 ${index} 行: 找不到 install-date-picker`);
+                    console.log(`第 ${index} 行: 找不到 install-date-picker，保留原始狀態`);
+                    // 計入統計但不重新計算
+                    countCurrentStatus(row);
                     return;
                 }
                 
                 const installDateStr = installDateInput.value; // YYYY-MM-DD 格式
                 if (!installDateStr) {
-                    console.log(`第 ${index} 行: 日期值為空`);
+                    console.log(`第 ${index} 行: 日期值為空，保留原始狀態`);
+                    // 計入統計但不重新計算
+                    countCurrentStatus(row);
                     return;
                 }
                 
                 const installDate = new Date(installDateStr);
                 if (isNaN(installDate.getTime())) {
-                    console.log(`第 ${index} 行: 無效的日期 ${installDateStr}`);
+                    console.log(`第 ${index} 行: 無效的日期 ${installDateStr}，保留原始狀態`);
+                    // 計入統計但不重新計算
+                    countCurrentStatus(row);
                     return;
                 }
                 
                 // 取得壽命週期（年）
                 const lifecycleCell = row.querySelector('.lifecycle');
-                if (!lifecycleCell) return;
+                if (!lifecycleCell) {
+                    // 計入統計但不重新計算
+                    countCurrentStatus(row);
+                    return;
+                }
                 
                 const lifecycleText = lifecycleCell.textContent.trim();
                 
                 // 跳過非年份單位的零件（如公里數）
                 if (!lifecycleText.includes('年')) {
                     // 這些零件保持原始狀態，只計算統計數字
-                    const statusBadge = row.querySelector('.status-badge');
-                    if (statusBadge) {
-                        if (statusBadge.classList.contains('badge-danger')) {
-                            expiredCount++;
-                        } else if (statusBadge.classList.contains('badge-warning')) {
-                            warningCount++;
-                        } else {
-                            normalCount++;
-                        }
-                    }
+                    countCurrentStatus(row);
                     return;
                 }
                 
@@ -3704,12 +3752,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             // 設定今日日期和初始化
             setTodayDate();
-            
-            // 進行初始計算
-            const baseDateInput = document.getElementById('baseDate');
-            if (baseDateInput && baseDateInput.value) {
-                recalculateAllParts(baseDateInput.value);
-            }
             
             // 添加訂購按鈕
             document.querySelectorAll('td[onclick]').forEach(function (td) {
