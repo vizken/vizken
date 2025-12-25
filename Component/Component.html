@@ -1,15 +1,908 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
+
 <head>
-<meta name="GENERATOR" content="XnView">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta http-equiv="Content-Language" content="en-us">
-<title>Tailift Forklift</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="GENERATOR" content="XnView">
+  <meta http-equiv="Content-Language" content="zh-TW">
+  <title>Tailift Forklift - 零件瀏覽</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      height: auto;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background-color: #f5f5f5;
+      height: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      --topH: 220px;
+      --splitH: 12px;
+      display: grid;
+      grid-template-columns: 470px 1fr;
+      height: 100vh;
+      gap: 0;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    /* 重要：桌面（左右兩欄）預設不要顯示分隔條，避免把右側 iframe 擠到下一行造成「右邊空白」 */
+    .splitter {
+      display: none;
+    }
+
+    /* 手機：≤600px → 改為 height: auto，允許滾動 */
+    @media (max-width: 600px) {
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        height: 100%;
+        overflow: auto !important;
+      }
+
+      .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(600px, auto);
+        height: auto;
+        min-height: 100vh;
+        width: 100%;
+      }
+
+      .left-panel {
+        padding: 0;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        overflow: visible !important;
+        height: auto;
+        flex: none !important;
+      }
+
+      .left-panel h1 {
+        padding: 8px 4px;
+        margin: 0;
+        font-size: 0.95rem;
+      }
+
+      .left-panel-content {
+        padding: 4px;
+        height: auto;
+        max-height: 180px;
+        overflow-x: auto;
+        overflow-y: visible;
+      }
+
+      .right-panel {
+        height: auto !important;
+        min-height: 600px !important;
+        overflow: auto !important;
+        flex: none !important;
+        display: block !important;
+      }
+
+      .right-panel iframe {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 600px !important;
+        display: block !important;
+      }
+
+      .left-panel-container {
+        display: grid;
+        grid-template-rows: repeat(2, auto);
+        grid-auto-flow: column;
+        grid-auto-columns: clamp(52px, 16vw, 80px);
+        gap: 4px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 2px;
+      }
+
+      
+
+/* 拖曳分隔條（直式/小螢幕才會顯示） */
+.splitter{
+  display:none;
+  background: linear-gradient(180deg, #fbbf24, #fb923c);
+  border-top: 2px solid #1e3a8a;
+  border-bottom: 2px solid #1e3a8a;
+  cursor: row-resize;
+  align-items:center;
+  justify-content:center;
+  user-select:none;
+  touch-action:none;
+}
+.splitter::before{
+  content:"⋯⋯⋯";
+  letter-spacing:6px;
+  font-weight:800;
+  color:#1e3a8a;
+  opacity:.9;
+  transform: translateY(-1px);
+}
+body.resizing, body.resizing *{ user-select:none !important; }
+
+.item {
+        position: relative;
+        min-height: 60px;
+      }
+
+      .item .name {
+        display: block;
+        /* 原本是 none，導致手機版看不到名稱 */
+        font-size: 10px;
+        /* 字體稍微調大一點點以利閱讀 */
+        padding: 1px 2px;
+      }
+    }
+
+    .left-panel {
+      background: white;
+      border-right: 1px solid #ddd;
+      overflow: hidden;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .left-panel h1 {
+      text-align: center;
+      font-size: 1rem;
+      padding: 10px 8px;
+      margin: 0;
+      background: #f9f9f9;
+      border-bottom: 1px solid #eee;
+      flex-shrink: 0;
+    }
+
+    .left-panel-content {
+      padding: 6px;
+      overflow: auto;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .right-panel {
+      background: white;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      flex: 1;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .right-panel iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      flex: 1;
+      min-height: 200px;
+      display: block;
+      overflow: hidden;
+    }
+
+    .item {
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .item a {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .item .name {
+      position: absolute;
+      bottom: 2px;
+      font-size: 8px;
+      color: #333;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 2px 4px;
+      border-radius: 2px;
+      max-width: 100%;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 桌面：>400px → 4列 × 25行 */
+    @media (min-width: 401px) {
+      .container {
+        grid-template-columns: 470px 1fr;
+      }
+
+      .left-panel-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(25, auto);
+        grid-auto-flow: row;
+        gap: 8px;
+      }
+
+      .item {
+        position: relative;
+      }
+    }
+
+    /* 平板直式：≤1024px 且直式 → 50列 × 2行（兩行往右捲） */
+    @media (max-width: 1024px) and (orientation: portrait) {
+      .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        gap: 0;
+      }
+
+      .left-panel {
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding: 0;
+        overflow: visible;
+      }
+
+      .left-panel h1 {
+        padding: 8px 6px;
+        margin: 0;
+        font-size: 0.95rem;
+      }
+
+      .left-panel-content {
+        padding: 4px;
+        height: auto;
+        max-height: 160px;
+        overflow: hidden;
+      }
+
+      .right-panel {
+        flex: 1;
+        min-height: 0;
+      }
+
+      .left-panel-container {
+        display: grid;
+        grid-template-rows: repeat(2, auto);
+        grid-template-columns: repeat(50, clamp(64px, 10vw, 110px));
+        grid-auto-flow: column;
+        overflow-x: auto;
+        overflow-y: hidden;
+        gap: 6px;
+        padding-bottom: 4px;
+      }
+
+      .item {
+        position: relative;
+      }
+    }
+
+    /* 超小螢幕 */
+    @media (max-width: 480px) {
+      body {
+        height: 100%;
+        overflow: auto !important;
+      }
+
+      .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(500px, auto);
+        height: auto;
+        min-height: 100vh;
+        width: 100%;
+      }
+
+      .left-panel {
+        padding: 0;
+        height: auto;
+        flex: none !important;
+      }
+
+      .left-panel h1 {
+        padding: 6px 4px;
+        font-size: 0.9rem;
+      }
+
+      .left-panel-content {
+        padding: 2px;
+        max-height: 180px;
+        overflow-x: auto;
+        overflow-y: visible;
+        height: auto;
+      }
+
+      .left-panel-container {
+        gap: 3px;
+        padding-bottom: 2px;
+      }
+
+      .right-panel {
+        height: auto !important;
+        min-height: 500px !important;
+        overflow: auto !important;
+        flex: none !important;
+        display: block !important;
+      }
+
+      .right-panel iframe {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 500px !important;
+        display: block !important;
+      }
+    }
+  
+
+/* ===== 依照截圖：上方要可拖曳分隔條；底部不要出現整頁水平捲軸 ===== */
+@media (max-width: 1024px) and (orientation: portrait), (max-width: 600px) {
+  body{
+    overflow: hidden !important; /* 讓頁面本身不出現捲軸（避免底部水平捲軸） */
+  }
+  .container{
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--topH) var(--splitH) 1fr;
+    height: 100dvh;
+  }
+  .left-panel{
+    grid-row: 1;
+    height: 100%;
+    overflow: hidden;
+  }
+  .splitter{
+    display:flex;
+    grid-row: 2;
+    height: var(--splitH);
+  }
+  .right-panel{
+    grid-row: 3;
+    overflow: hidden;
+  }
+  .right-panel iframe{
+    height: 100%;
+    min-height: 0 !important;
+  }
+  /* 上方面板內容：只允許縮圖列自己的水平捲動 */
+  .left-panel-content{
+    height: 100%;
+    max-height: none;
+    overflow: hidden;
+  }
+  .left-panel-container{
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+}
+
+
+</style>
 </head>
 
-<frameset cols="470px, *">
-<frame src="thumb.html" name="frame1" frameborder="1" marginwidth="0">
-<frame src="original\31040A.html" name="frame2" frameborder="0" marginwidth="0">
-</frameset>
+<body>
+  <div class="container">
+    <!-- 左側：零件縮圖列表 -->
+    <div class="left-panel">
+      <h1>零件Component</h1>
+      <div class="left-panel-content">
+        <div class="left-panel-container">
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/31040A.html')"><img
+                src="thumb/t_31040A.jpg" alt="31040A"></a>
+            <div class="name">31040A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/32331B.html')"><img
+                src="thumb/t_32331B.jpg" alt="32331B"></a>
+            <div class="name">32331B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/32333B.html')"><img
+                src="thumb/t_32333B.jpg" alt="32333B"></a>
+            <div class="name">32333B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/32350.html')"><img
+                src="thumb/t_32350.jpg" alt="32350"></a>
+            <div class="name">32350</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/32358.html')"><img
+                src="thumb/t_32358.jpg" alt="32358"></a>
+            <div class="name">32358</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/32363.html')"><img
+                src="thumb/t_32363.jpg" alt="32363"></a>
+            <div class="name">32363</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/32526.html')"><img
+                src="thumb/t_32526.jpg" alt="32526"></a>
+            <div class="name">32526</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/32643B.html')"><img
+                src="thumb/t_32643B.jpg" alt="32643B"></a>
+            <div class="name">32643B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/32924.html')"><img
+                src="thumb/t_32924.jpg" alt="32924"></a>
+            <div class="name">32924</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/32932C.html')"><img
+                src="thumb/t_32932C.jpg" alt="32932C"></a>
+            <div class="name">32932C</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/33428.html')"><img
+                src="thumb/t_33428.jpg" alt="33428"></a>
+            <div class="name">33428</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/33782.html')"><img
+                src="thumb/t_33782.jpg" alt="33782"></a>
+            <div class="name">33782</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/34902.html')"><img
+                src="thumb/t_34902.jpg" alt="34902"></a>
+            <div class="name">34902</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/35746A.html')"><img
+                src="thumb/t_35746A.jpg" alt="35746A"></a>
+            <div class="name">35746A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/35949B.html')"><img
+                src="thumb/t_35949B.jpg" alt="35949B"></a>
+            <div class="name">35949B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/36769A.html')"><img
+                src="thumb/t_36769A.jpg" alt="36769A"></a>
+            <div class="name">36769A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/36854B.html')"><img
+                src="thumb/t_36854B.jpg" alt="36854B"></a>
+            <div class="name">36854B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3002491C.html')"><img
+                src="thumb/t_3002491C.jpg" alt="3002491C"></a>
+            <div class="name">3002491C</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3002770A.html')"><img
+                src="thumb/t_3002770A.jpg" alt="3002770A"></a>
+            <div class="name">3002770A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3003223.html')"><img
+                src="thumb/t_3003223.jpg" alt="3003223"></a>
+            <div class="name">3003223</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3003487A.html')"><img
+                src="thumb/t_3003487A.jpg" alt="3003487A"></a>
+            <div class="name">3003487A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3003578.html')"><img
+                src="thumb/t_3003578.jpg" alt="3003578"></a>
+            <div class="name">3003578</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3004189.html')"><img
+                src="thumb/t_3004189.jpg" alt="3004189"></a>
+            <div class="name">3004189</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3004496A.html')"><img
+                src="thumb/t_3004496A.jpg" alt="3004496A"></a>
+            <div class="name">3004496A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3005365C.html')"><img
+                src="thumb/t_3005365C.jpg" alt="3005365C"></a>
+            <div class="name">3005365C</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3009363J.html')"><img
+                src="thumb/t_3009363J.jpg" alt="3009363J"></a>
+            <div class="name">3009363J</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3009413.html')"><img
+                src="thumb/t_3009413.jpg" alt="3009413"></a>
+            <div class="name">3009413</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010174E.html')"><img
+                src="thumb/t_3010174E.jpg" alt="3010174E"></a>
+            <div class="name">3010174E</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010175D.html')"><img
+                src="thumb/t_3010175D.jpg" alt="3010175D"></a>
+            <div class="name">3010175D</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010177E.html')"><img
+                src="thumb/t_3010177E.jpg" alt="3010177E"></a>
+            <div class="name">3010177E</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010179C.html')"><img
+                src="thumb/t_3010179C.jpg" alt="3010179C"></a>
+            <div class="name">3010179C</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010180E.html')"><img
+                src="thumb/t_3010180E.jpg" alt="3010180E"></a>
+            <div class="name">3010180E</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010746B.html')"><img
+                src="thumb/t_3010746B.jpg" alt="3010746B"></a>
+            <div class="name">3010746B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010766.html')"><img
+                src="thumb/t_3010766.jpg" alt="3010766"></a>
+            <div class="name">3010766</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010773E.html')"><img
+                src="thumb/t_3010773E.jpg" alt="3010773E"></a>
+            <div class="name">3010773E</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010804A.html')"><img
+                src="thumb/t_3010804A.jpg" alt="3010804A"></a>
+            <div class="name">3010804A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010805A.html')"><img
+                src="thumb/t_3010805A.jpg" alt="3010805A"></a>
+            <div class="name">3010805A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010847D.html')"><img
+                src="thumb/t_3010847D.jpg" alt="3010847D"></a>
+            <div class="name">3010847D</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010850D.html')"><img
+                src="thumb/t_3010850D.jpg" alt="3010850D"></a>
+            <div class="name">3010850D</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010988B.html')"><img
+                src="thumb/t_3010988B.jpg" alt="3010988B"></a>
+            <div class="name">3010988B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3010989A.html')"><img
+                src="thumb/t_3010989A.jpg" alt="3010989A"></a>
+            <div class="name">3010989A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3011023B.html')"><img
+                src="thumb/t_3011023B.jpg" alt="3011023B"></a>
+            <div class="name">3011023B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3012008-S01.html')"><img
+                src="thumb/t_3012008-S01.jpg" alt="3012008-S01"></a>
+            <div class="name">3012008-S01</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3012596.html')"><img
+                src="thumb/t_3012596.jpg" alt="3012596"></a>
+            <div class="name">3012596</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3012608.html')"><img
+                src="thumb/t_3012608.jpg" alt="3012608"></a>
+            <div class="name">3012608</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3012778A.html')"><img
+                src="thumb/t_3012778A.jpg" alt="3012778A"></a>
+            <div class="name">3012778A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3012985.html')"><img
+                src="thumb/t_3012985.jpg" alt="3012985"></a>
+            <div class="name">3012985</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3013327C.html')"><img
+                src="thumb/t_3013327C.jpg" alt="3013327C"></a>
+            <div class="name">3013327C</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3013526.html')"><img
+                src="thumb/t_3013526.jpg" alt="3013526"></a>
+            <div class="name">3013526</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3013964.html')"><img
+                src="thumb/t_3013964.jpg" alt="3013964"></a>
+            <div class="name">3013964</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3014038A.html')"><img
+                src="thumb/t_3014038A.jpg" alt="3014038A"></a>
+            <div class="name">3014038A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3014317C.html')"><img
+                src="thumb/t_3014317C.jpg" alt="3014317C"></a>
+            <div class="name">3014317C</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3015655.html')"><img
+                src="thumb/t_3015655.jpg" alt="3015655"></a>
+            <div class="name">3015655</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3015656.html')"><img
+                src="thumb/t_3015656.jpg" alt="3015656"></a>
+            <div class="name">3015656</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3015660A.html')"><img
+                src="thumb/t_3015660A.jpg" alt="3015660A"></a>
+            <div class="name">3015660A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3015696.html')"><img
+                src="thumb/t_3015696.jpg" alt="3015696"></a>
+            <div class="name">3015696</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3015713A.html')"><img
+                src="thumb/t_3015713A.jpg" alt="3015713A"></a>
+            <div class="name">3015713A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3015717A.html')"><img
+                src="thumb/t_3015717A.jpg" alt="3015717A"></a>
+            <div class="name">3015717A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3015854.html')"><img
+                src="thumb/t_3015854.jpg" alt="3015854"></a>
+            <div class="name">3015854</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3016694.html')"><img
+                src="thumb/t_3016694.jpg" alt="3016694"></a>
+            <div class="name">3016694</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3016695.html')"><img
+                src="thumb/t_3016695.jpg" alt="3016695"></a>
+            <div class="name">3016695</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3017336A.html')"><img
+                src="thumb/t_3017336A.jpg" alt="3017336A"></a>
+            <div class="name">3017336A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3017337A.html')"><img
+                src="thumb/t_3017337A.jpg" alt="3017337A"></a>
+            <div class="name">3017337A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3017919A.html')"><img
+                src="thumb/t_3017919A.jpg" alt="3017919A"></a>
+            <div class="name">3017919A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3018678.html')"><img
+                src="thumb/t_3018678.jpg" alt="3018678"></a>
+            <div class="name">3018678</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3019159B.html')"><img
+                src="thumb/t_3019159B.jpg" alt="3019159B"></a>
+            <div class="name">3019159B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3019421A.html')"><img
+                src="thumb/t_3019421A.jpg" alt="3019421A"></a>
+            <div class="name">3019421A</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3019447.html')"><img
+                src="thumb/t_3019447.jpg" alt="3019447"></a>
+            <div class="name">3019447</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3019711.html')"><img
+                src="thumb/t_3019711.jpg" alt="3019711"></a>
+            <div class="name">3019711</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3019909.html')"><img
+                src="thumb/t_3019909.jpg" alt="3019909"></a>
+            <div class="name">3019909</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/3019918.html')"><img
+                src="thumb/t_3019918.jpg" alt="3019918"></a>
+            <div class="name">3019918</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B350252C.html')"><img
+                src="thumb/t_B350252C.jpg" alt="B350252C"></a>
+            <div class="name">B350252C</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B350286C.html')"><img
+                src="thumb/t_B350286C.jpg" alt="B350286C"></a>
+            <div class="name">B350286C</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B350307D.html')"><img
+                src="thumb/t_B350307D.jpg" alt="B350307D"></a>
+            <div class="name">B350307D</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B350311D.html')"><img
+                src="thumb/t_B350311D.jpg" alt="B350311D"></a>
+            <div class="name">B350311D</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B350312D.html')"><img
+                src="thumb/t_B350312D.jpg" alt="B350312D"></a>
+            <div class="name">B350312D</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B350318D.html')"><img
+                src="thumb/t_B350318D.jpg" alt="B350318D"></a>
+            <div class="name">B350318D</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B350805C.html')"><img
+                src="thumb/t_B350805C.jpg" alt="B350805C"></a>
+            <div class="name">B350805C</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B351671I.html')"><img
+                src="thumb/t_B351671I.jpg" alt="B351671I"></a>
+            <div class="name">B351671I</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B351744B.html')"><img
+                src="thumb/t_B351744B.jpg" alt="B351744B"></a>
+            <div class="name">B351744B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B351745B.html')"><img
+                src="thumb/t_B351745B.jpg" alt="B351745B"></a>
+            <div class="name">B351745B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B352975C.html')"><img
+                src="thumb/t_B352975C.jpg" alt="B352975C"></a>
+            <div class="name">B352975C</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B354536F.html')"><img
+                src="thumb/t_B354536F.jpg" alt="B354536F"></a>
+            <div class="name">B354536F</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B356561B.html')"><img
+                src="thumb/t_B356561B.jpg" alt="B356561B"></a>
+            <div class="name">B356561B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B356562B.html')"><img
+                src="thumb/t_B356562B.jpg" alt="B356562B"></a>
+            <div class="name">B356562B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B358137G.html')"><img
+                src="thumb/t_B358137G.jpg" alt="B358137G"></a>
+            <div class="name">B358137G</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B359284B.html')"><img
+                src="thumb/t_B359284B.jpg" alt="B359284B"></a>
+            <div class="name">B359284B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B359285B.html')"><img
+                src="thumb/t_B359285B.jpg" alt="B359285B"></a>
+            <div class="name">B359285B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B359286B.html')"><img
+                src="thumb/t_B359286B.jpg" alt="B359286B"></a>
+            <div class="name">B359286B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/B359287B.html')"><img
+                src="thumb/t_B359287B.jpg" alt="B359287B"></a>
+            <div class="name">B359287B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/E0216006.html')"><img
+                src="thumb/t_E0216006.jpg" alt="E0216006"></a>
+            <div class="name">E0216006</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/E2301058B.html')"><img
+                src="thumb/t_E2301058B.jpg" alt="E2301058B"></a>
+            <div class="name">E2301058B</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/E2301060.html')"><img
+                src="thumb/t_E2301060.jpg" alt="E2301060"></a>
+            <div class="name">E2301060</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/E3601073D.html')"><img
+                src="thumb/t_E3601073D.jpg" alt="E3601073D"></a>
+            <div class="name">E3601073D</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/M0403014.html')"><img
+                src="thumb/t_M0403014.jpg" alt="M0403014"></a>
+            <div class="name">M0403014</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/M1211012.html')"><img
+                src="thumb/t_M1211012.jpg" alt="M1211012"></a>
+            <div class="name">M1211012</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/M1211019.html')"><img
+                src="thumb/t_M1211019.jpg" alt="M1211019"></a>
+            <div class="name">M1211019</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/M1211020.html')"><img
+                src="thumb/t_M1211020.jpg" alt="M1211020"></a>
+            <div class="name">M1211020</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/M1317017.html')"><img
+                src="thumb/t_M1317017.jpg" alt="M1317017"></a>
+            <div class="name">M1317017</div>
+          </div>
+          <div class="item"><a href="javascript:void(0)" onclick="loadDetail('original/M1317063.html')"><img
+                src="thumb/t_M1317063.jpg" alt="M1317063"></a>
+            <div class="name">M1317063</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="splitter" id="splitter" role="separator" aria-orientation="horizontal" tabindex="0" aria-label="拖曳調整上方面板高度"></div>
+
+    <!-- 右側：零件詳細信息 -->
+    <div class="right-panel">
+      <iframe id="detailFrame" src="original/31040A.html" title="零件詳情"></iframe>
+    </div>
+  </div>
+
+  <script>
+    function loadDetail(url) {
+      document.getElementById('detailFrame').src = url;
+    }
+  
+
+// 直式/小螢幕：拖曳分隔條調整上方面板高度
+(function () {
+  const splitter = document.getElementById('splitter');
+  const container = document.querySelector('.container');
+  if (!splitter || !container) return;
+
+  const enabled = () =>
+    window.matchMedia('(max-width: 1024px) and (orientation: portrait)').matches ||
+    window.matchMedia('(max-width: 600px)').matches;
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+  function setTopHeight(px) {
+    const min = 120;                 // 上方面板最小高度
+    const max = window.innerHeight - 220; // 保留下方至少 220px
+    const h = clamp(px, min, Math.max(min, max));
+    document.documentElement.style.setProperty('--topH', h + 'px');
+  }
+
+  // 初始值：若已設定就不覆蓋
+  function init() {
+    if (!enabled()) return;
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--topH').trim();
+    if (!v) setTopHeight(220);
+  }
+
+  let dragging = false;
+
+  splitter.addEventListener('pointerdown', (e) => {
+    if (!enabled()) return;
+    dragging = true;
+    splitter.setPointerCapture(e.pointerId);
+    document.body.classList.add('resizing');
+  });
+
+  splitter.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const rect = container.getBoundingClientRect();
+    setTopHeight(e.clientY - rect.top);
+  });
+
+  splitter.addEventListener('pointerup', () => {
+    dragging = false;
+    document.body.classList.remove('resizing');
+  });
+  splitter.addEventListener('pointercancel', () => {
+    dragging = false;
+    document.body.classList.remove('resizing');
+  });
+
+  // 鍵盤微調（可選）
+  splitter.addEventListener('keydown', (e) => {
+    if (!enabled()) return;
+    const cur = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--topH')) || 220;
+    if (e.key === 'ArrowUp') { e.preventDefault(); setTopHeight(cur - 12); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); setTopHeight(cur + 12); }
+  });
+
+  window.addEventListener('resize', init);
+  init();
+})();
+
+
+</script>
+</body>
 
 </html>
