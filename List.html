@@ -24,7 +24,9 @@
         :root {
             --fs-scale: 1;
 
-            --bg-body: #111827;
+            
+            --thumb-size: 62px;
+--bg-body: #111827;
             --bg-card: #1f2937;
             --border-color: #374151;
             --text-primary: #f3f4f6;
@@ -162,12 +164,12 @@
             color: var(--text-secondary);
             font-weight: 600;
             text-align: left;
-            padding: 16px;
+            padding: 5px;
             border-bottom: 1px solid var(--border-color);
         }
 
         td {
-            padding: 16px;
+            padding: 5px;
             border-bottom: 1px solid #374151;
             vertical-align: middle;
             color: var(--text-secondary);
@@ -418,7 +420,84 @@
                 flex-direction:column;
                 gap:12px;
             }
-            .left-panel{
+            /* 你定義的「手機模式」（上下堆疊）縮圖尺寸 */
+            :root{ --thumb-size: 40px; }
+            
+
+            /* 手機模式：上方統計卡片高度縮小約 50%（紅框區） */
+            .summary-grid{
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+            .card{
+                padding: 10px;
+            }
+            .card-label{
+                margin-bottom: 4px;
+                font-size: calc(12px * var(--fs-scale));
+            }
+            .card-value{
+                font-size: calc(24px * var(--fs-scale));
+            }
+
+            /* 手機模式：列表列高縮小約 50%（紅框區） */
+            th, td{
+                padding: 2px 4px;
+                line-height: 1.1;
+            }
+
+            /* 名稱/型號改成同一行，避免兩行把列高撐大 */
+            .primary-text{
+                display: inline;
+                margin: 0;
+                line-height: 1.1;
+            }
+            .secondary-text{
+                display: inline;
+                margin-left: 6px;
+                line-height: 1.1;
+                font-size: calc(10px * var(--fs-scale));
+            }
+            /* 第一欄：縮小圖片與文字間距，並強制不換行（超出用省略） */
+            tbody td[onclick] > div{ gap: 6px !important; }
+            tbody td[onclick] > div > div{
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            /* 日期輸入框太高：縮小 padding */
+            .install-date-picker{
+                padding: 2px 4px;
+                font-size: calc(12px * var(--fs-scale));
+            }
+
+            /* 狀態膠囊縮小 */
+            .status-badge{
+                padding: 2px 8px;
+                font-size: calc(11px * var(--fs-scale));
+            }
+
+            /* 進度條/文字縮小 */
+            .progress-bar-bg{
+                height: 4px;
+                margin-bottom: 2px;
+            }
+            .progress-text{
+                font-size: calc(10px * var(--fs-scale));
+                line-height: 1.1;
+            }
+
+            /* 剩餘天數那行 margin-bottom 會撐高：拿掉 */
+            .remaining-cell div[style*="margin-bottom"]{ margin-bottom: 0 !important; }
+
+            /* 訂購按鈕縮小 */
+            .order-button{
+                padding: 6px 10px;
+                border-radius: 6px;
+                font-size: calc(14px * var(--fs-scale));
+            }
+.left-panel{
                 width:100%;
                 max-width:100%;
                 flex:0 0 auto;
@@ -432,7 +511,8 @@
         }
 
         @media (max-width: 640px){
-            .left-panel{ max-height:50%; }
+            :root{ --thumb-size: 40px; }
+.left-panel{ max-height:50%; }
             .right-panel{ min-height:0; }
         }
 
@@ -512,7 +592,7 @@
                                 <td onclick="openPartInFrame('E3601073D')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/E3601073D.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">臺製圓表</span>
                                             <span class="secondary-text">E3601073D</span>
@@ -542,7 +622,7 @@
                                 <td onclick="openPartInFrame('32350')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/32350.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">輪胎</span>
                                             <span class="secondary-text">32350</span>
@@ -576,7 +656,7 @@
                                 <td onclick="openPartInFrame('32358')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/32358.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">輪胎</span>
                                             <span class="secondary-text">32358</span>
@@ -606,7 +686,7 @@
                                 <td onclick="openPartInFrame('32363')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/32363.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">輪胎</span>
                                             <span class="secondary-text">32363</span>
@@ -636,7 +716,7 @@
                                 <td onclick="openPartInFrame('M1211012')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/M1211012.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">輪胎</span>
                                             <span class="secondary-text">M1211012</span>
@@ -666,7 +746,7 @@
                                 <td onclick="openPartInFrame('M1211019')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/M1211019.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">輪胎</span>
                                             <span class="secondary-text">M1211019</span>
@@ -696,7 +776,7 @@
                                 <td onclick="openPartInFrame('M1211020')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/M1211020.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">輪胎</span>
                                             <span class="secondary-text">M1211020</span>
@@ -726,7 +806,7 @@
                                 <td onclick="openPartInFrame('B356561B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B356561B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">傾斜缸組立-左</span>
                                             <span class="secondary-text">B356561B</span>
@@ -756,7 +836,7 @@
                                 <td onclick="openPartInFrame('B356562B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B356562B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">傾斜缸組立-右</span>
                                             <span class="secondary-text">B356562B</span>
@@ -786,7 +866,7 @@
                                 <td onclick="openPartInFrame('B350307D')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B350307D.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">貨櫃油壓缸組</span>
                                             <span class="secondary-text">B350307D</span>
@@ -816,7 +896,7 @@
                                 <td onclick="openPartInFrame('B350311D')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B350311D.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">貨櫃油壓缸組</span>
                                             <span class="secondary-text">B350311D</span>
@@ -846,7 +926,7 @@
                                 <td onclick="openPartInFrame('B350312D')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B350312D.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">貨櫃油壓缸組</span>
                                             <span class="secondary-text">B350312D</span>
@@ -876,7 +956,7 @@
                                 <td onclick="openPartInFrame('B350318D')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B350318D.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">貨櫃油壓缸組</span>
                                             <span class="secondary-text">B350318D</span>
@@ -906,7 +986,7 @@
                                 <td onclick="openPartInFrame('B350805C')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B350805C.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">貨櫃油壓缸組</span>
                                             <span class="secondary-text">B350805C</span>
@@ -936,7 +1016,7 @@
                                 <td onclick="openPartInFrame('B350286C')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B350286C.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">升降油壓缸組立-左</span>
                                             <span class="secondary-text">B350286C</span>
@@ -966,7 +1046,7 @@
                                 <td onclick="openPartInFrame('B351745B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B351745B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">升降油壓缸組立-左</span>
                                             <span class="secondary-text">B351745B</span>
@@ -996,7 +1076,7 @@
                                 <td onclick="openPartInFrame('B351744B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B351744B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">升降油壓缸組-右</span>
                                             <span class="secondary-text">B351744B</span>
@@ -1026,7 +1106,7 @@
                                 <td onclick="openPartInFrame('B350252C')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B350252C.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">升降油壓缸組-右</span>
                                             <span class="secondary-text">B350252C</span>
@@ -1056,7 +1136,7 @@
                                 <td onclick="openPartInFrame('B359285B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B359285B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">傾斜缸組立-右</span>
                                             <span class="secondary-text">B359285B</span>
@@ -1086,7 +1166,7 @@
                                 <td onclick="openPartInFrame('B359287B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B359287B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">傾斜缸組立-右</span>
                                             <span class="secondary-text">B359287B</span>
@@ -1116,7 +1196,7 @@
                                 <td onclick="openPartInFrame('B359284B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B359284B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">傾斜缸組立-左</span>
                                             <span class="secondary-text">B359284B</span>
@@ -1146,7 +1226,7 @@
                                 <td onclick="openPartInFrame('B359286B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/B359286B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">傾斜缸組立-左</span>
                                             <span class="secondary-text">B359286B</span>
@@ -1176,7 +1256,7 @@
                                 <td onclick="openPartInFrame('E0216006')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/E0216006.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">閃光器</span>
                                             <span class="secondary-text">E0216006</span>
@@ -1206,7 +1286,7 @@
                                 <td onclick="openPartInFrame('36769A')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/36769A.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">加速鋼索</span>
                                             <span class="secondary-text">36769A</span>
@@ -1236,7 +1316,7 @@
                                 <td onclick="openPartInFrame('32333B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/32333B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">手煞車線-右</span>
                                             <span class="secondary-text">32333B</span>
@@ -1266,7 +1346,7 @@
                                 <td onclick="openPartInFrame('32331B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/32331B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">手煞車線-左</span>
                                             <span class="secondary-text">32331B</span>
@@ -1296,7 +1376,7 @@
                                 <td onclick="openPartInFrame('35746A')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/35746A.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">加速鋼索</span>
                                             <span class="secondary-text">35746A</span>
@@ -1326,7 +1406,7 @@
                               <td onclick="openPartInFrame('3018678')" style="cursor:pointer;">
     <div style="display: flex; align-items: center; gap: 10px;">
         <img alt="" src="Component/original/3018678.jpg"
-            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
         <div>
             <span class="primary-text">減震墊</span>
             <span class="secondary-text">3018678</span>
@@ -1356,7 +1436,7 @@
                                 <td onclick="openPartInFrame('3004496A')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/3004496A.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">5分油管滾輪</span>
                                             <span class="secondary-text">3004496A</span>
@@ -1386,7 +1466,7 @@
                                 <td onclick="openPartInFrame('M0403014')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/M0403014.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">90度隔板接頭</span>
                                             <span class="secondary-text">M0403014</span>
@@ -1416,7 +1496,7 @@
                                 <td onclick="openPartInFrame('33782')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/33782.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">U形螺栓</span>
                                             <span class="secondary-text">33782</span>
@@ -1446,7 +1526,7 @@
                                 <td onclick="openPartInFrame('3002491C')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/3002491C.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">配重</span>
                                             <span class="secondary-text">3002491C</span>
@@ -1476,7 +1556,7 @@
                                 <td onclick="openPartInFrame('3004189')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/3004189.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">固定軸組合</span>
                                             <span class="secondary-text">3004189</span>
@@ -1506,7 +1586,7 @@
                                 <td onclick="openPartInFrame('3010174E')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/3010174E.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">擋風板飾板-左</span>
                                             <span class="secondary-text">3010174E</span>
@@ -1536,7 +1616,7 @@
                                 <td onclick="openPartInFrame('3010175D')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/3010175D.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">擋風板飾板-右</span>
                                             <span class="secondary-text">3010175D</span>
@@ -1566,7 +1646,7 @@
                                 <td onclick="openPartInFrame('3010746B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/3010746B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">副水箱固定座</span>
                                             <span class="secondary-text">3010746B</span>
@@ -1596,7 +1676,7 @@
                                 <td onclick="openPartInFrame('3010988B')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/3010988B.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">煞車鋼管-左</span>
                                             <span class="secondary-text">3010988B</span>
@@ -1626,7 +1706,7 @@
                                 <td onclick="openPartInFrame('3010989A')" style="cursor:pointer;">
                                     <div style="display: flex; align-items: center; gap: 10px;">
                                         <img alt="" src="Component/original/3010989A.jpg"
-                                            style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                            style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                                         <div>
                                             <span class="primary-text">煞車鋼管-右</span>
                                             <span class="secondary-text">3010989A</span>
@@ -1656,7 +1736,7 @@
     <td onclick="openPartInFrame('3012008-S01')" style="cursor:pointer;">
         <div style="display: flex; align-items: center; gap: 10px;">
             <img alt="" src="Component/original/3012008-S01.jpg"
-                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
             <div>
                 <span class="primary-text">副水箱</span>
                 <span class="secondary-text">3012008-S01</span>
@@ -1690,7 +1770,7 @@
                     <td onclick="openPartInFrame('3012608')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3012608.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">轉向閥</span>
                                 <span class="secondary-text">3012608</span>
@@ -1719,7 +1799,7 @@
                     <td onclick="openPartInFrame('3013526')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3013526.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">後輪鋼圈</span>
                                 <span class="secondary-text">3013526</span>
@@ -1748,7 +1828,7 @@
                     <td onclick="openPartInFrame('3014038A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3014038A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">煞車鋼管</span>
                                 <span class="secondary-text">3014038A</span>
@@ -1777,7 +1857,7 @@
                     <td onclick="openPartInFrame('3014317C')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3014317C.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">液壓油蓋板</span>
                                 <span class="secondary-text">3014317C</span>
@@ -1806,7 +1886,7 @@
                     <td onclick="openPartInFrame('3015660A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3015660A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">耐高溫水管-下</span>
                                 <span class="secondary-text">3015660A</span>
@@ -1835,7 +1915,7 @@
                     <td onclick="openPartInFrame('3015854')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3015854.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">耐高溫水管-上</span>
                                 <span class="secondary-text">3015854</span>
@@ -1864,7 +1944,7 @@
                     <td onclick="openPartInFrame('3017336A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3017336A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">燈罩-左</span>
                                 <span class="secondary-text">3017336A</span>
@@ -1893,7 +1973,7 @@
                     <td onclick="openPartInFrame('3017337A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3017337A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">燈罩-右</span>
                                 <span class="secondary-text">3017337A</span>
@@ -1922,7 +2002,7 @@
                     <td onclick="openPartInFrame('3019159B')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3019159B.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">氣壓棒</span>
                                 <span class="secondary-text">3019159B</span>
@@ -1951,7 +2031,7 @@
                     <td onclick="openPartInFrame('3019447')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3019447.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">後視鏡</span>
                                 <span class="secondary-text">3019447</span>
@@ -1980,7 +2060,7 @@
                     <td onclick="openPartInFrame('31040A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/31040A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">前輪鋼圈</span>
                                 <span class="secondary-text">31040A</span>
@@ -2009,7 +2089,7 @@
                     <td onclick="openPartInFrame('B351671I')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/B351671I.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">排檔開關組</span>
                                 <span class="secondary-text">B351671I</span>
@@ -2038,7 +2118,7 @@
                     <td onclick="openPartInFrame('B352975C')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/B352975C.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">引擎蓋固定鈕組</span>
                                 <span class="secondary-text">B352975C</span>
@@ -2067,7 +2147,7 @@
                     <td onclick="openPartInFrame('3003223')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3003223.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">三通閥</span>
                                 <span class="secondary-text">3003223</span>
@@ -2096,7 +2176,7 @@
                     <td onclick="openPartInFrame('3003487A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3003487A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">瓦斯固定板</span>
                                 <span class="secondary-text">3003487A</span>
@@ -2125,7 +2205,7 @@
                     <td onclick="openPartInFrame('3010773E')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3010773E.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">左封板</span>
                                 <span class="secondary-text">3010773E</span>
@@ -2154,7 +2234,7 @@
                     <td onclick="openPartInFrame('3017919A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3017919A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">左封板</span>
                                 <span class="secondary-text">3017919A</span>
@@ -2183,7 +2263,7 @@
                     <td onclick="openPartInFrame('3010804A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3010804A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">引擎蓋固定板</span>
                                 <span class="secondary-text">3010804A</span>
@@ -2212,7 +2292,7 @@
                     <td onclick="openPartInFrame('3010805A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3010805A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">方向機固定座</span>
                                 <span class="secondary-text">3010805A</span>
@@ -2241,7 +2321,7 @@
                     <td onclick="openPartInFrame('3012596')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3012596.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">吸油管</span>
                                 <span class="secondary-text">3012596</span>
@@ -2270,7 +2350,7 @@
                     <td onclick="openPartInFrame('M1317063')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/M1317063.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">把手</span>
                                 <span class="secondary-text">M1317063</span>
@@ -2299,7 +2379,7 @@
                     <td onclick="openPartInFrame('3012985')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3012985.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">主滾輪</span>
                                 <span class="secondary-text">3012985</span>
@@ -2328,7 +2408,7 @@
                     <td onclick="openPartInFrame('3019421A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3019421A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">底部保護板</span>
                                 <span class="secondary-text">3019421A</span>
@@ -2357,7 +2437,7 @@
                     <td onclick="openPartInFrame('3003578')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3003578.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">油管固定夾片</span>
                                 <span class="secondary-text">3003578</span>
@@ -2386,7 +2466,7 @@
                     <td onclick="openPartInFrame('3013964')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3013964.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">油管滾輪</span>
                                 <span class="secondary-text">3013964</span>
@@ -2415,7 +2495,7 @@
                     <td onclick="openPartInFrame('3019909')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3019909.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">油管滾輪</span>
                                 <span class="secondary-text">3019909</span>
@@ -2444,7 +2524,7 @@
                     <td onclick="openPartInFrame('3019918')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3019918.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">油管滾輪</span>
                                 <span class="secondary-text">3019918</span>
@@ -2473,7 +2553,7 @@
                     <td onclick="openPartInFrame('3002770A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3002770A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">油管滾輪</span>
                                 <span class="secondary-text">3002770A</span>
@@ -2502,7 +2582,7 @@
                     <td onclick="openPartInFrame('3015696')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3015696.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">風罩</span>
                                 <span class="secondary-text">3015696</span>
@@ -2531,7 +2611,7 @@
                     <td onclick="openPartInFrame('3019711')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3019711.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">風罩</span>
                                 <span class="secondary-text">3019711</span>
@@ -2560,7 +2640,7 @@
                     <td onclick="openPartInFrame('3015713A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3015713A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">空氣接管</span>
                                 <span class="secondary-text">3015713A</span>
@@ -2589,7 +2669,7 @@
                     <td onclick="openPartInFrame('3016694')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3016694.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">空氣引管</span>
                                 <span class="secondary-text">3016694</span>
@@ -2618,7 +2698,7 @@
                     <td onclick="openPartInFrame('3016695')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3016695.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">空氣引管</span>
                                 <span class="secondary-text">3016695</span>
@@ -2647,7 +2727,7 @@
                     <td onclick="openPartInFrame('3010766')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3010766.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">後燈座</span>
                                 <span class="secondary-text">3010766</span>
@@ -2676,7 +2756,7 @@
                     <td onclick="openPartInFrame('34902')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/34902.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">防塵護套</span>
                                 <span class="secondary-text">34902</span>
@@ -2705,7 +2785,7 @@
                     <td onclick="openPartInFrame('35949B')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/35949B.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">托架</span>
                                 <span class="secondary-text">35949B</span>
@@ -2734,7 +2814,7 @@
                     <td onclick="openPartInFrame('36854B')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/36854B.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">向上排氣管封蓋</span>
                                 <span class="secondary-text">36854B</span>
@@ -2763,7 +2843,7 @@
                     <td onclick="openPartInFrame('3009363J')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3009363J.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">引擎蓋</span>
                                 <span class="secondary-text">3009363J</span>
@@ -2792,7 +2872,7 @@
                     <td onclick="openPartInFrame('3009413')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3009413.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">引擎蓋扭臂</span>
                                 <span class="secondary-text">3009413</span>
@@ -2821,7 +2901,7 @@
                     <td onclick="openPartInFrame('3010179C')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3010179C.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">方向機飾板-前</span>
                                 <span class="secondary-text">3010179C</span>
@@ -2850,7 +2930,7 @@
                     <td onclick="openPartInFrame('3010180E')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3010180E.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">方向機飾板-後</span>
                                 <span class="secondary-text">3010180E</span>
@@ -2879,7 +2959,7 @@
                     <td onclick="openPartInFrame('3010847D')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3010847D.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">防滑踏板-左</span>
                                 <span class="secondary-text">3010847D</span>
@@ -2908,7 +2988,7 @@
                     <td onclick="openPartInFrame('3010850D')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3010850D.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">防滑踏板-右</span>
                                 <span class="secondary-text">3010850D</span>
@@ -2937,7 +3017,7 @@
                     <td onclick="openPartInFrame('3011023B')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3011023B.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">水箱蓋</span>
                                 <span class="secondary-text">3011023B</span>
@@ -2966,7 +3046,7 @@
                     <td onclick="openPartInFrame('3012778A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3012778A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">出風網</span>
                                 <span class="secondary-text">3012778A</span>
@@ -2995,7 +3075,7 @@
                     <td onclick="openPartInFrame('3013327C')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3013327C.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">冷卻水箱</span>
                                 <span class="secondary-text">3013327C</span>
@@ -3024,7 +3104,7 @@
                     <td onclick="openPartInFrame('3015655')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3015655.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">引擎托架-左</span>
                                 <span class="secondary-text">3015655</span>
@@ -3053,7 +3133,7 @@
                     <td onclick="openPartInFrame('3015656')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3015656.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">引擎托架-右</span>
                                 <span class="secondary-text">3015656</span>
@@ -3082,7 +3162,7 @@
                     <td onclick="openPartInFrame('3015717A')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3015717A.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">上車把手</span>
                                 <span class="secondary-text">3015717A</span>
@@ -3111,7 +3191,7 @@
                     <td onclick="openPartInFrame('32643B')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/32643B.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">方向燈座</span>
                                 <span class="secondary-text">32643B</span>
@@ -3140,7 +3220,7 @@
                     <td onclick="openPartInFrame('B354536F')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/B354536F.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">方向機套管組</span>
                                 <span class="secondary-text">B354536F</span>
@@ -3169,7 +3249,7 @@
                     <td onclick="openPartInFrame('3005365C')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3005365C.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">方向心軸</span>
                                 <span class="secondary-text">3005365C</span>
@@ -3198,7 +3278,7 @@
                     <td onclick="openPartInFrame('B358137G')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/B358137G.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">手煞車總成</span>
                                 <span class="secondary-text">B358137G</span>
@@ -3227,7 +3307,7 @@
                     <td onclick="openPartInFrame('E2301058B')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/E2301058B.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">LED後車燈</span>
                                 <span class="secondary-text">E2301058B</span>
@@ -3256,7 +3336,7 @@
                     <td onclick="openPartInFrame('E2301060')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/E2301060.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">LED方向燈</span>
                                 <span class="secondary-text">E2301060</span>
@@ -3285,7 +3365,7 @@
                     <td onclick="openPartInFrame('M1317017')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/M1317017.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">可調式把手</span>
                                 <span class="secondary-text">M1317017</span>
@@ -3314,7 +3394,7 @@
                     <td onclick="openPartInFrame('3010177E')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/3010177E.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">腳踏板組立-後</span>
                                 <span class="secondary-text">3010177E</span>
@@ -3343,7 +3423,7 @@
                     <td onclick="openPartInFrame('32526')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/32526.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">90°接頭</span>
                                 <span class="secondary-text">32526</span>
@@ -3372,7 +3452,7 @@
                     <td onclick="openPartInFrame('33428')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/33428.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">90°接頭</span>
                                 <span class="secondary-text">33428</span>
@@ -3401,7 +3481,7 @@
                     <td onclick="openPartInFrame('32924')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/32924.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">鍊條固定座</span>
                                 <span class="secondary-text">32924</span>
@@ -3430,7 +3510,7 @@
                     <td onclick="openPartInFrame('32932C')" style="cursor:pointer;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img alt="" src="Component/original/32932C.jpg"
-                                style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
+                                style="width: var(--thumb-size); height: var(--thumb-size); object-fit: cover; border-radius: 4px; border: 1px solid #4b5563; display: block;" />
                             <div>
                                 <span class="primary-text">電木套</span>
                                 <span class="secondary-text">32932C</span>
