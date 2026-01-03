@@ -80,20 +80,19 @@
         box-shadow: 0 0 12px var(--accent-cyan);
       }
 
-      /* 懸浮按鈕樣式 (小螢幕顯示) - 位於右上方，極小圖示 */
+      /* 懸浮按鈕樣式 (小螢幕顯示) - 位於右上方 */
       .info-fab {
         display: none; position: fixed; top: 16px; right: 16px;
-        width: 24px; height: 24px; border-radius: 50%;
+        width: 36px; height: 36px; border-radius: 50%;
         background: var(--panel-bg); backdrop-filter: blur(10px);
         border: 1px solid var(--accent-cyan); color: var(--accent-cyan);
         align-items: center; justify-content: center; z-index: 2000;
         cursor: pointer; font-family: serif; font-style: italic; font-weight: 900; 
-        font-size: 10px; /* 字體大小約 5-10px 視覺效果 */
         box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 8px var(--accent-cyan);
         transition: transform 0.2s, background 0.2s;
         padding: 0; line-height: 1;
       }
-      .info-fab span { font-size: 10px; transform: scale(0.6); } /* 讓 i 看起來更細小 */
+      .info-fab span { font-size: 20px; } /* 字體大小約 20px */
       .info-fab:active { transform: scale(0.9); background: var(--accent-cyan); color: #000; }
 
       /* RWD: 當寬度或高度小於 500px 時，隱藏面板並顯示按鈕 */
